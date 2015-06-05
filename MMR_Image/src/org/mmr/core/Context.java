@@ -14,6 +14,7 @@ import java.util.Set;
 public final class Context {
 
     private Path chosenDirectory;
+    private int bins;
     private List<DocumentBean> documents = new ArrayList<>();
     private final Set<EContentType> allowedContentTypes = new HashSet<>();
 
@@ -46,6 +47,14 @@ public final class Context {
 
     public void setDocuments(List<DocumentBean> documents) {
         this.documents = documents;
+    }
+
+    public int getBins() {
+        return bins;
+    }
+
+    public void setBins(int bins) {
+        this.bins = bins;
     }
 
 }
