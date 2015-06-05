@@ -66,12 +66,12 @@ public class DocumentBeanExtractor {
 			}
 		}
 
-		final float[][] histogramRGBFull = new float[3][pixelCount];
+		final float[][] histogramRGBFull = new float[3][];
 		histogramRGBFull[0] = red;
 		histogramRGBFull[1] = green;
 		histogramRGBFull[2] = blue;
 
-		final float[][] histogramHSBFull = new float[3][pixelCount];
+		final float[][] histogramHSBFull = new float[3][];
 		histogramHSBFull[0] = hue;
 		histogramHSBFull[1] = saturation;
 		histogramHSBFull[2] = brightness;
