@@ -59,7 +59,6 @@ public final class Engine {
 	 * @return - the results from this query search
 	 *
 	 * @throws java.io.IOException
-	 * @throws org.apache.lucene.queryparser.classic.ParseException
 	 */
 	public static List<DocumentBean> search(final String queryString) throws IOException /*, ParseException*/ {
 		if (queryString == null || queryString.trim().isEmpty()) {
