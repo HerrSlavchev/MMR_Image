@@ -1,76 +1,69 @@
 package org.mmr.core;
 
-import java.util.Optional;
-
 public final class DocumentBean {
 
 	private final String path;
-	private final String content;
-	private Optional<String> title = Optional.empty();
-        
-        private float[][] histogramRGBFull = new float[3][256];
-        private float[][] histogramHSVFull = new float[3][256];
-        
-        private float[][] histrogramRGBBins;
-        private float[][] histrogramHSVBins;
 
-	public DocumentBean(final String path, final String content, final String title) {
-		this(path, content);
-		this.title = Optional.of(title);
+	private final int width;
+
+	private final int height;
+
+	private final float[][] histogramRGBFull;
+
+	private final float[][] histogramHSBFull;
+
+	private float[][] histrogramRGBBins;
+
+	private float[][] histrogramHSBBins;
+
+	public DocumentBean(final String path, final int width, final int height, final float[][] histogramRGBFull, final float[][] histogramHSBFull) {
+		this.path = path;
+		this.width = width;
+		this.height = height;
+		this.histogramRGBFull = histogramRGBFull;
+		this.histogramHSBFull = histogramHSBFull;
 	}
 
-	public DocumentBean(final String path, final String content) {
-		this.path = path;
-		this.content = content;
-	}	
+	public int getWidth() {
+		return width;
+	}
+
+	public int getHeight() {
+		return height;
+	}
 
 	public String getPath() {
 		return path;
 	}
 
-	public String getContent() {
-		return content;
+	public float[][] getHistogramRGBFull() {
+		return histogramRGBFull;
 	}
 
-	public Optional<String> getTitle() {
-		return title;
+	public float[][] getHistogramHSBFull() {
+		return histogramHSBFull;
 	}
 
-	@Override
-	public String toString() {
-		return String.format("path: %s, title: %s", path, title.orElse(""));
+	/**
+	 * @return null, if array isn't initialized!
+	 */
+	public float[][] getHistrogramRGBBins() {
+		return histrogramRGBBins;
 	}
 
-    public float[][] getHistogramRGBFull() {
-        return histogramRGBFull;
-    }
+	public void setHistrogramRGBBins(final float[][] histrogramRGBBins) {
+		this.histrogramRGBBins = histrogramRGBBins;
+	}
 
-    public void setHistogramRGBFull(float[][] histogramRGBFull) {
-        this.histogramRGBFull = histogramRGBFull;
-    }
+	/**
+	 * @return null, if array isn't initialized!
+	 */
+	public float[][] getHistrogramHSBBins() {
+		return histrogramHSBBins;
+	}
 
-    public float[][] getHistogramHSVFull() {
-        return histogramHSVFull;
-    }
-
-    public void setHistogramHSVFull(float[][] histogramHSVFull) {
-        this.histogramHSVFull = histogramHSVFull;
-    }
-
-    public float[][] getHistrogramRGBBins() {
-        return histrogramRGBBins;
-    }
-
-    public void setHistrogramRGBBins(float[][] histrogramRGBBins) {
-        this.histrogramRGBBins = histrogramRGBBins;
-    }
-
-    public float[][] getHistrogramHSVBins() {
-        return histrogramHSVBins;
-    }
-
-    public void setHistrogramHSVBins(float[][] histrogramHSVBins) {
-        this.histrogramHSVBins = histrogramHSVBins;
-    }
+	public void setHistrogramHSBBins(final float[][] histrogramHSBBins) {
+		this.histrogramHSBBins = histrogramHSBBins;
+	}
 
 }
