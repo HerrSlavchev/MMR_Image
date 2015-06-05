@@ -105,6 +105,7 @@ public class MainSceneController implements Initializable {
         try {
             Engine.createIndex(context);
         } catch (RuntimeException eR) {
+            eR.printStackTrace();
             showDialog(eR.getMessage());
         }
     }
@@ -126,6 +127,7 @@ public class MainSceneController implements Initializable {
 
             Logger.getGlobal().log(Level.SEVERE, errorMessage, exception);
         } catch (RuntimeException eR) {
+            eR.printStackTrace();
             showDialog(eR.getMessage());
         }
     }

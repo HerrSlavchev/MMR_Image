@@ -14,6 +14,10 @@ public class Fuzzyfier {
     public static float[] toHistogram(float[] feed, float normalizationMinimum, float normalizationMaximum, int bins) {
 
         float[] res = new float[bins];
+        for (int i = 0; i < res.length; i++) {
+            res[i] = 0;
+        }
+        
         float binLength = (normalizationMaximum - normalizationMinimum) / bins;
         //res[0]: frequency of "0", res[1]: frequency of "binLength", ... res[i] = frequency of "i*binLength"
 
@@ -21,14 +25,14 @@ public class Fuzzyfier {
             float value = feed[i];
             float relativeIdx = value / binLength;
             int resIdx = (int) relativeIdx;
-            
-            if (resIdx == res.length - 1 || value % bins == 0) {
+
+            if (resIdx >= res.length - 1 || value % bins == 0) {
                 res[resIdx] += 1;
             } else {
                 float distToLowerBin = relativeIdx - resIdx;
-                res[resIdx] += distToLowerBin;
                 float distToUpperBin = 1 - distToLowerBin;
-                res[resIdx + 1] += distToUpperBin;
+                res[resIdx] += distToUpperBin;
+                res[resIdx + 1] += distToLowerBin;
             }
         }
 
