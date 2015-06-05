@@ -19,8 +19,8 @@ public final class Context {
 
     {
         // Default allowed content types are initialized.
-        allowedContentTypes.add(EContentType.TXT);
-        allowedContentTypes.add(EContentType.HTML);
+        allowedContentTypes.add(EContentType.PNG);
+        allowedContentTypes.add(EContentType.BMP);
     }
 
     public Optional<Path> getChosenDirectory() {

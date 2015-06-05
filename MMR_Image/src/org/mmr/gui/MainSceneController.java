@@ -81,12 +81,12 @@ public class MainSceneController implements Initializable {
 	@FXML
 	private void jbBuildClicked(ActionEvent ae) {
 		List<EContentType> chosenMIMEs = new ArrayList<>();
-		if (chbTXT.isSelected()) {
+		/*if (chbTXT.isSelected()) {
 			chosenMIMEs.add(EContentType.TXT);
 		}
 		if (chbHTML.isSelected()) {
 			chosenMIMEs.add(EContentType.HTML);
-		}
+		}*/
 
 		context.setAllowedContentTypes(chosenMIMEs);
 

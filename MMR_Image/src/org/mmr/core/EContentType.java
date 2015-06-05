@@ -7,27 +7,27 @@ import java.util.Optional;
  */
 public enum EContentType {
 
-	TXT("text/plain"), HTML("text/html");
+    BMP("image/x-ms-bmp"), JPEG("image/jpeg"), PNG("image/png"), TIFF("image/tiff");
 
-	private final String value;
+    private final String value;
 
-	private EContentType(final String value) {
-		this.value = value;
-	}
+    private EContentType(final String value) {
+        this.value = value;
+    }
 
-	public static final Optional<EContentType> of(final String value) {
-		for (final EContentType contentType : EContentType.values()) {
-			if (value.toLowerCase().startsWith(contentType.value)) {
-				return Optional.of(contentType);
-			}
-		}
+    public static final Optional<EContentType> of(final String value) {
+        for (final EContentType contentType : EContentType.values()) {
+            if (value.toLowerCase().startsWith(contentType.value)) {
+                return Optional.of(contentType);
+            }
+        }
 
-		return Optional.empty();
-	}
+        return Optional.empty();
+    }
 
-	@Override
-	public String toString() {
-		return value;
-	}
+    @Override
+    public String toString() {
+        return value;
+    }
 
 }
