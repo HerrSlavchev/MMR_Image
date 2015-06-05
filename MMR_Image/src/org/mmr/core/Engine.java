@@ -46,10 +46,10 @@ public final class Engine {
                     int bins = context.getBins();
                     for (DocumentBean doc : documents) {
                         for (int i = 0; i < 3; i++) {
-                            float[] tmpHistogramRGB = Fuzzyfier.toHistogram(doc.getHistogramRGBFull()[i], 0, 255, bins);
-                            doc.getHistrogramRGBBins()[i] = tmpHistogramRGB;
-                            float[] tmpHistogramHSB = Fuzzyfier.toHistogram(doc.getHistogramHSBFull()[i], 0, 1, bins);
-                            doc.getHistrogramHSBBins()[i] = tmpHistogramHSB;
+                            float[] tmpHistogramRGB = Fuzzyfier.toHistogram(doc.getDataRGB()[i], 0, 255, bins);
+                            doc.getHistrogramRGB()[i] = tmpHistogramRGB;
+                            float[] tmpHistogramHSB = Fuzzyfier.toHistogram(doc.getDataHSB()[i], 0, 1, bins);
+                            doc.getHistrogramHSB()[i] = tmpHistogramHSB;
                         }
                     }
                     

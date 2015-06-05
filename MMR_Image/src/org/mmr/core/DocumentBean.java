@@ -8,20 +8,24 @@ public final class DocumentBean {
 
 	private final int height;
 
-	private final float[][] histogramRGBFull;
+	private final float[][] dataRGB;
 
-	private final float[][] histogramHSBFull;
+	private final float[][] dataHSB;
 
-	private float[][] histrogramRGBBins;
+	private float[][] histrogramRGB;
 
-	private float[][] histrogramHSBBins;
+	private float[][] histrogramHSB;
 
-	public DocumentBean(final String path, final int width, final int height, final float[][] histogramRGBFull, final float[][] histogramHSBFull) {
+	public DocumentBean(final String path, final int width, final int height, final float[][] dataRGB, final float[][] dataHSB) {
 		this.path = path;
 		this.width = width;
 		this.height = height;
-		this.histogramRGBFull = histogramRGBFull;
-		this.histogramHSBFull = histogramHSBFull;
+		this.dataRGB = dataRGB;
+		this.dataHSB = dataHSB;
+	}
+
+	public String getPath() {
+		return path;
 	}
 
 	public int getWidth() {
@@ -32,38 +36,34 @@ public final class DocumentBean {
 		return height;
 	}
 
-	public String getPath() {
-		return path;
+	public float[][] getDataRGB() {
+		return dataRGB;
 	}
 
-	public float[][] getHistogramRGBFull() {
-		return histogramRGBFull;
-	}
-
-	public float[][] getHistogramHSBFull() {
-		return histogramHSBFull;
+	public float[][] getDataHSB() {
+		return dataHSB;
 	}
 
 	/**
 	 * @return null, if array isn't initialized!
 	 */
-	public float[][] getHistrogramRGBBins() {
-		return histrogramRGBBins;
+	public float[][] getHistrogramRGB() {
+		return histrogramRGB;
 	}
 
-	public void setHistrogramRGBBins(final float[][] histrogramRGBBins) {
-		this.histrogramRGBBins = histrogramRGBBins;
+	public void setHistrogramRGB(final float[][] histrogramRGB) {
+		this.histrogramRGB = histrogramRGB;
 	}
 
 	/**
 	 * @return null, if array isn't initialized!
 	 */
-	public float[][] getHistrogramHSBBins() {
-		return histrogramHSBBins;
+	public float[][] getHistrogramHSB() {
+		return histrogramHSB;
 	}
 
-	public void setHistrogramHSBBins(final float[][] histrogramHSBBins) {
-		this.histrogramHSBBins = histrogramHSBBins;
+	public void setHistrogramHSB(final float[][] histrogramHSB) {
+		this.histrogramHSB = histrogramHSB;
 	}
 
 }

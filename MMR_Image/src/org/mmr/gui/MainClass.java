@@ -1,24 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.mmr.gui;
 
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
-/**
- *
- * @author root
- */
 public class MainClass extends Application {
 
     //the primary stage
@@ -36,7 +23,7 @@ public class MainClass extends Application {
         //bind the primary stage to this controller
         stage = primaryStage;
         //prepare the UI
-        primaryStage.setTitle("Programming task 1: IndexerFX");
+        primaryStage.setTitle("Programming task 2: ImageIndexerFX");
         FXMLLoader loader = new FXMLLoader(getClass().getResource("MainScene.fxml"));
         Pane pane = loader.load();
         Scene scene = new Scene(pane);
