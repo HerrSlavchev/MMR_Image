@@ -12,9 +12,9 @@ public final class DocumentBean {
 
 	private final float[][] dataHSB;
 
-	private float[][] histrogramRGB;
+	private final float[][] histrogramRGB = new float[3][];
 
-	private float[][] histrogramHSB;
+	private final float[][] histrogramHSB = new float[3][];
 
 	public DocumentBean(final String path, final int width, final int height, final float[][] dataRGB, final float[][] dataHSB) {
 		this.path = path;
@@ -44,26 +44,12 @@ public final class DocumentBean {
 		return dataHSB;
 	}
 
-	/**
-	 * @return null, if array isn't initialized!
-	 */
 	public float[][] getHistrogramRGB() {
 		return histrogramRGB;
 	}
 
-	public void setHistrogramRGB(final float[][] histrogramRGB) {
-		this.histrogramRGB = histrogramRGB;
-	}
-
-	/**
-	 * @return null, if array isn't initialized!
-	 */
 	public float[][] getHistrogramHSB() {
 		return histrogramHSB;
-	}
-
-	public void setHistrogramHSB(final float[][] histrogramHSB) {
-		this.histrogramHSB = histrogramHSB;
 	}
 
 }

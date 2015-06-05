@@ -18,6 +18,7 @@ public class DocumentBeanExtractor {
 		switch (contentType) {
 			case BMP:
 			case PNG:
+			case JPEG:
 				documentBean = getDocumentBean(path);
 				break;
 			default:
