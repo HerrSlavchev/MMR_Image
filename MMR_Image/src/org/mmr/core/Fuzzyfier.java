@@ -11,10 +11,10 @@ package org.mmr.core;
  */
 public class Fuzzyfier {
 
-    public static float[] toHistogram(float[] feed, int normalizationMinimum, int normalizationMaximum, int bins) {
+    public static float[] toHistogram(float[] feed, float normalizationMinimum, float normalizationMaximum, int bins) {
 
         float[] res = new float[bins];
-        int binLength = (normalizationMaximum - normalizationMinimum) / bins;
+        float binLength = (normalizationMaximum - normalizationMinimum) / bins;
         //res[0]: frequency of "0", res[1]: frequency of "binLength", ... res[i] = frequency of "i*binLength"
 
         for (int i = 0; i < feed.length; i++) {
