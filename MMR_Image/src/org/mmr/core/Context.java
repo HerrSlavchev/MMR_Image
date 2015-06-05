@@ -20,6 +20,7 @@ public final class Context {
 
     {
         // Default allowed content types are initialized.
+        bins = 64;
         allowedContentTypes.add(EContentType.PNG);
         allowedContentTypes.add(EContentType.BMP);
     }
