@@ -26,8 +26,10 @@ public class Fuzzyfier {
             float relativeIdx = value / binLength;
             int resIdx = (int) relativeIdx;
 
-            if (resIdx >= res.length - 1 || value % bins == 0) {
+            if ( value % bins == 0) {
                 res[resIdx] += 1;
+            } if (resIdx >= res.length - 1) {
+                res[res.length - 1] += 1;
             } else {
                 float distToLowerBin = relativeIdx - resIdx;
                 float distToUpperBin = 1 - distToLowerBin;
