@@ -13,49 +13,49 @@ import java.util.Set;
  */
 public final class Context {
 
-    private Path chosenDirectory;
-    private int bins;
-    private List<DocumentBean> documents = new ArrayList<>();
-    private final Set<EContentType> allowedContentTypes = new HashSet<>();
+    private static Path chosenDirectory;
+    private static int bins;
+    private static List<DocumentBean> documents = new ArrayList<>();
+    private static final Set<EContentType> allowedContentTypes = new HashSet<>();
 
-    {
+    static {
         // Default allowed content types are initialized.
         bins = 64;
         allowedContentTypes.add(EContentType.PNG);
         allowedContentTypes.add(EContentType.BMP);
     }
 
-    public Optional<Path> getChosenDirectory() {
+    public static Optional<Path> getChosenDirectory() {
         return Optional.ofNullable(chosenDirectory);
     }
 
-    public void setChosenDirectory(final Path directory) {
+    public static void setChosenDirectory(final Path directory) {
         chosenDirectory = directory;
     }
 
-    public Set<EContentType> getAllowedContentTypes() {
+    public static Set<EContentType> getAllowedContentTypes() {
         return allowedContentTypes;
     }
 
-    public void setAllowedContentTypes(final Collection<EContentType> contentTypes) {
+    public static void setAllowedContentTypes(final Collection<EContentType> contentTypes) {
         allowedContentTypes.clear();
         allowedContentTypes.addAll(contentTypes);
     }
 
-    public List<DocumentBean> getDocuments() {
+    public static List<DocumentBean> getDocuments() {
         return documents;
     }
 
-    public void setDocuments(List<DocumentBean> documents) {
-        this.documents = documents;
+    public static void setDocuments(List<DocumentBean> docs) {
+        documents = docs;
     }
 
-    public int getBins() {
+    public static int getBins() {
         return bins;
     }
 
-    public void setBins(int bins) {
-        this.bins = bins;
+    public static void setBins(int number) {
+        bins = number;
     }
 
 }

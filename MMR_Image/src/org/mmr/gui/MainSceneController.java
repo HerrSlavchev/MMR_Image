@@ -54,7 +54,6 @@ public class MainSceneController implements Initializable {
     @FXML
     private TextArea taResults;
 
-    private final Context context = new Context();
     private DirectoryChooser chooser = null;
 
     /**
@@ -73,7 +72,7 @@ public class MainSceneController implements Initializable {
     private void jbDirClicked(ActionEvent ae) {
         File chosenDir = chooser.showDialog(MainClass.getStage());
         if (chosenDir != null) {
-            context.setChosenDirectory(chosenDir.toPath());
+            Context.setChosenDirectory(chosenDir.toPath());
             //save last choice
             String dirPath = chosenDir.getAbsolutePath();
             File parentDir = chosenDir.getParentFile();
@@ -100,10 +99,10 @@ public class MainSceneController implements Initializable {
             chosenMIMEs.add(EContentType.TIFF);
         }
 
-        context.setAllowedContentTypes(chosenMIMEs);
+        Context.setAllowedContentTypes(chosenMIMEs);
 
         try {
-            Engine.createIndex(context);
+            Engine.createIndex();
         } catch (RuntimeException eR) {
             eR.printStackTrace();
             showDialog(eR.getMessage());

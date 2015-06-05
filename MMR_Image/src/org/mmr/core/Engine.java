@@ -26,33 +26,22 @@ public final class Engine {
      * @param context - contains information about chosen directory and allowed
      * content types.
      */
-    public static final void createIndex(final Context context) {
+    public static final void createIndex() {
 
-        final Optional<Path> chosenDirectory = context.getChosenDirectory();
+        final Optional<Path> chosenDirectory = Context.getChosenDirectory();
 
         if (chosenDirectory.isPresent()) {
-            final Set<EContentType> allowedContentTypes = context.getAllowedContentTypes();
+            final Set<EContentType> allowedContentTypes = Context.getAllowedContentTypes();
 
             if (!allowedContentTypes.isEmpty()) {
                 try {
-                    final List<DocumentBean> documents = context.getDocuments();
+                    final List<DocumentBean> documents = Context.getDocuments();
                     Files.walkFileTree(
                             chosenDirectory.get(),
                             EnumSet.of(FOLLOW_LINKS),
                             Integer.MAX_VALUE,
                             new EngineDirectoryVisitor(allowedContentTypes, documents)
-                    );
-                    
-                    int bins = context.getBins();
-                    for (DocumentBean doc : documents) {
-                        for (int i = 0; i < 3; i++) {
-                            float[] tmpHistogramRGB = Fuzzyfier.toHistogram(doc.getDataRGB()[i], 0, 255, bins);
-                            doc.getHistrogramRGB()[i] = tmpHistogramRGB;
-                            float[] tmpHistogramHSB = Fuzzyfier.toHistogram(doc.getDataHSB()[i], 0, 1, bins);
-                            doc.getHistrogramHSB()[i] = tmpHistogramHSB;
-                        }
-                    }
-                    
+                    );                    
                 } catch (final IOException exception) {
                     Logger.getGlobal().log(Level.SEVERE, "Unexpected exception occurred while walking through a file tree.", exception);
                 }

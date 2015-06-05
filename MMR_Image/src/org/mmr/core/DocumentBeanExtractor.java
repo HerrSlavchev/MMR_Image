@@ -30,53 +30,60 @@ public class DocumentBeanExtractor {
 	}
 
 	private static DocumentBean getDocumentBean(final Path path) throws IOException {
+            
+                final int bins = Context.getBins();
+                
 		final String absolutePath = path.toAbsolutePath().toString();
 
 		final BufferedImage bufferedImage = ImageIO.read(path.toFile());
 		final Raster raster = bufferedImage.getRaster();
 		final int width = raster.getWidth();
 		final int height = raster.getHeight();
-		final int pixelCount = width * height;
+                
+                //RGB histogram components
+		final float[] red = new float[bins];
+		final float[] green = new float[bins];
+		final float[] blue = new float[bins];
+                
+                //HSB histogram components
+		final float[] hue = new float[bins];
+		final float[] saturation = new float[bins];
+		final float[] brightness = new float[bins];
 
-		final float[] red = new float[pixelCount];
-		final float[] green = new float[pixelCount];
-		final float[] blue = new float[pixelCount];
-
-		final float[] hue = new float[pixelCount];
-		final float[] saturation = new float[pixelCount];
-		final float[] brightness = new float[pixelCount];
-
-		int pixelIndex = 0;
+                float[] tmpValues;
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
+                                
 				final int[] rgb = new int[3];
 				raster.getPixel(x, y, rgb);
-
-				red[pixelIndex] = rgb[0];
-				green[pixelIndex] = rgb[1];
-				blue[pixelIndex] = rgb[2];
+                                tmpValues = Fuzzyfier.extractValuesForIndex(rgb[0], 0, 255, bins);
+                                Fuzzyfier.updateHistogram(tmpValues, red);
+				tmpValues = Fuzzyfier.extractValuesForIndex(rgb[1], 0, 255, bins);
+                                Fuzzyfier.updateHistogram(tmpValues, green);
+                                tmpValues = Fuzzyfier.extractValuesForIndex(rgb[2], 0, 255, bins);
+                                Fuzzyfier.updateHistogram(tmpValues, blue);
 
 				final float[] hsb = new float[3];
 				Color.RGBtoHSB(rgb[0], rgb[1], rgb[2], hsb);
-
-				hue[pixelIndex] = hsb[0];
-				saturation[pixelIndex] = hsb[1];
-				brightness[pixelIndex] = hsb[2];
-
-				pixelIndex++;
+				tmpValues = Fuzzyfier.extractValuesForIndex(hsb[0], 0, 1, bins);
+                                Fuzzyfier.updateHistogram(tmpValues, hue);
+				tmpValues = Fuzzyfier.extractValuesForIndex(hsb[1], 0, 1, bins);
+                                Fuzzyfier.updateHistogram(tmpValues, saturation);
+                                tmpValues = Fuzzyfier.extractValuesForIndex(hsb[2], 0, 1, bins);
+                                Fuzzyfier.updateHistogram(tmpValues, brightness);
 			}
 		}
 
-		final float[][] histogramRGBFull = new float[3][];
-		histogramRGBFull[0] = red;
-		histogramRGBFull[1] = green;
-		histogramRGBFull[2] = blue;
+		final float[][] histogramRGB = new float[3][];
+		histogramRGB[0] = red;
+		histogramRGB[1] = green;
+		histogramRGB[2] = blue;
 
-		final float[][] histogramHSBFull = new float[3][];
-		histogramHSBFull[0] = hue;
-		histogramHSBFull[1] = saturation;
-		histogramHSBFull[2] = brightness;
+		final float[][] histogramHSB = new float[3][];
+		histogramHSB[0] = hue;
+		histogramHSB[1] = saturation;
+		histogramHSB[2] = brightness;
 
-		return new DocumentBean(absolutePath, width, height, histogramRGBFull, histogramHSBFull);
+		return new DocumentBean(absolutePath, width, height, histogramRGB, histogramHSB);
 	}
 }

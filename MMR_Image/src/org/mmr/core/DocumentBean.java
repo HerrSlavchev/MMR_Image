@@ -8,20 +8,16 @@ public final class DocumentBean {
 
 	private final int height;
 
-	private final float[][] dataRGB;
+	private final float[][] histrogramRGB;
 
-	private final float[][] dataHSB;
+	private final float[][] histrogramHSB;
 
-	private final float[][] histrogramRGB = new float[3][];
-
-	private final float[][] histrogramHSB = new float[3][];
-
-	public DocumentBean(final String path, final int width, final int height, final float[][] dataRGB, final float[][] dataHSB) {
+	public DocumentBean(final String path, final int width, final int height, final float[][] histrogramRGB, final float[][] histrogramHSB) {
 		this.path = path;
 		this.width = width;
 		this.height = height;
-		this.dataRGB = dataRGB;
-		this.dataHSB = dataHSB;
+		this.histrogramRGB = histrogramRGB;
+		this.histrogramHSB = histrogramHSB;
 	}
 
 	public String getPath() {
@@ -34,14 +30,6 @@ public final class DocumentBean {
 
 	public int getHeight() {
 		return height;
-	}
-
-	public float[][] getDataRGB() {
-		return dataRGB;
-	}
-
-	public float[][] getDataHSB() {
-		return dataHSB;
 	}
 
 	public float[][] getHistrogramRGB() {

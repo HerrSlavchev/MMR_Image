@@ -17,27 +17,48 @@ public class Fuzzyfier {
         for (int i = 0; i < res.length; i++) {
             res[i] = 0;
         }
-        
-        float binLength = (normalizationMaximum - normalizationMinimum) / bins;
-        //res[0]: frequency of "0", res[1]: frequency of "binLength", ... res[i] = frequency of "i*binLength"
 
         for (int i = 0; i < feed.length; i++) {
             float value = feed[i];
-            float relativeIdx = value / binLength;
-            int resIdx = (int) relativeIdx;
-
-            if ( value % bins == 0) {
-                res[resIdx] += 1;
-            } if (resIdx >= res.length - 1) {
-                res[res.length - 1] += 1;
-            } else {
-                float distToLowerBin = relativeIdx - resIdx;
-                float distToUpperBin = 1 - distToLowerBin;
-                res[resIdx] += distToUpperBin;
-                res[resIdx + 1] += distToLowerBin;
-            }
+            float[] valuesAndIndex = extractValuesForIndex(value, normalizationMinimum, normalizationMaximum, bins);
+            updateHistogram(valuesAndIndex, res);
         }
 
         return res;
+    }
+
+    public static float[] extractValuesForIndex(float value, float normalizationMinimum, float normalizationMaximum, int bins) {
+
+        float[] res = new float[]{
+            0, //the index position of preceeding bin
+            0, //the value to add to "preceeding" bin
+            0 //the value to add to "following" bin -- use only if different from 0, otherwise ignore!
+        };
+
+        float binLength = (normalizationMaximum - normalizationMinimum) / bins;
+        float relativeIdx = value / binLength;
+        int resIdx = (int) relativeIdx;
+
+        res[0] = resIdx + 0.0001f;
+        if (value % bins == 0) {
+            res[1] = 1;
+        } else if (resIdx >= res.length - 1) {
+            res[0] = res.length - 0.9999f;
+            res[1] = 1;
+        } else {
+            float distToLowerBin = relativeIdx - resIdx;
+            float distToUpperBin = 1 - distToLowerBin;
+            res[1] = distToUpperBin;
+            res[2] += distToLowerBin;
+        }
+        return res;
+    }
+
+    public static void updateHistogram(float[] valuesForIndex, float[] target) {
+        int lowerIdx = (int) valuesForIndex[0];
+        target[lowerIdx] += valuesForIndex[1];
+        if (valuesForIndex[2] != 0) {
+            target[lowerIdx + 1] += valuesForIndex[2];
+        }
     }
 }
