@@ -3,10 +3,14 @@ package org.mmr.gui;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
@@ -16,8 +20,10 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBoxBuilder;
 import javafx.scene.text.Text;
@@ -32,10 +38,10 @@ import org.mmr.core.EContentType;
 public class MainSceneController implements Initializable {
 
 	@FXML
-	private TextField chooseIndexFolderTextField;
+	private TextField indexDirectoryTextField;
 
 	@FXML
-	private TextField chooseDataFolderTextField;
+	private TextField dataDirectoryTextField;
 
 	@FXML
 	private ChoiceBox<Integer> histogramBinsChoiceBox;
@@ -49,6 +55,12 @@ public class MainSceneController implements Initializable {
 	@FXML
 	private CheckBox pngCheckBox;
 
+	@FXML
+	private Button createIndexButton;
+
+	@FXML
+	private ProgressIndicator createIndexProgressIndicator;
+
 	private final DirectoryChooser indexDirectoryChooser = new DirectoryChooser();
 
 	private final DirectoryChooser dataDirectoryChooser = new DirectoryChooser();
@@ -60,14 +72,19 @@ public class MainSceneController implements Initializable {
 
 		indexDirectoryChooser.setTitle("Choose an index directory");
 		dataDirectoryChooser.setTitle("Choose a data directory");
+
+		final Set<EContentType> allowedContentTypes = Context.getAllowedContentTypes();
+
+		bmpCheckBox.setSelected(allowedContentTypes.contains(EContentType.BMP));
+		jpegCheckBox.setSelected(allowedContentTypes.contains(EContentType.JPEG));
+		pngCheckBox.setSelected(allowedContentTypes.contains(EContentType.PNG));
 	}
 
 	@FXML
 	private void clickChooseIndexFolderButton(final ActionEvent actionEvent) {
 		final Optional<File> indexDirecotry = chooseDirectory(indexDirectoryChooser);
 		if (indexDirecotry.isPresent()) {
-			Context.setIndexDirectory(indexDirecotry.get().toPath());
-			chooseIndexFolderTextField.setText(indexDirecotry.get().getAbsolutePath());
+			indexDirectoryTextField.setText(indexDirecotry.get().getAbsolutePath());
 		}
 	}
 
@@ -75,8 +92,7 @@ public class MainSceneController implements Initializable {
 	private void clickChooseDataFolderButton(final ActionEvent actionEvent) {
 		final Optional<File> dataDirecotry = chooseDirectory(dataDirectoryChooser);
 		if (dataDirecotry.isPresent()) {
-			Context.setDataDirectory(dataDirecotry.get().toPath());
-			chooseDataFolderTextField.setText(dataDirecotry.get().getAbsolutePath());
+			dataDirectoryTextField.setText(dataDirecotry.get().getAbsolutePath());
 		}
 	}
 
@@ -97,26 +113,67 @@ public class MainSceneController implements Initializable {
 	}
 
 	@FXML
-	private void jbBuildClicked(ActionEvent ae) {
-		List<EContentType> chosenMIMEs = new ArrayList<>();
-		if (bmpCheckBox.isSelected()) {
-			chosenMIMEs.add(EContentType.BMP);
-		}
-		if (jpegCheckBox.isSelected()) {
-			chosenMIMEs.add(EContentType.JPEG);
-		}
-		if (pngCheckBox.isSelected()) {
-			chosenMIMEs.add(EContentType.PNG);
+	private void clickCreateIndexButton(final ActionEvent actionEvent) {
+		createIndexButton.setDisable(true);
+		createIndexProgressIndicator.setVisible(true);
+
+		if (isIndexCreationFormValid()) {
+			Context.setIndexDirectory(Paths.get(indexDirectoryTextField.getText()));
+			Context.setDataDirectory(Paths.get(dataDirectoryTextField.getText()));
+			Context.setHistogramBinCount(histogramBinsChoiceBox.getValue());
+
+			List< EContentType> selectedContentTypes = new ArrayList<>();
+
+			if (bmpCheckBox.isSelected()) {
+				selectedContentTypes.add(EContentType.BMP);
+			}
+
+			if (jpegCheckBox.isSelected()) {
+				selectedContentTypes.add(EContentType.JPEG);
+			}
+
+			if (pngCheckBox.isSelected()) {
+				selectedContentTypes.add(EContentType.PNG);
+			}
+
+			Context.setAllowedContentTypes(selectedContentTypes);
 		}
 
-		Context.setAllowedContentTypes(chosenMIMEs);
+		createIndexButton.setDisable(false);
+		createIndexProgressIndicator.setVisible(false);
+	}
 
-		try {
-			Engine.createIndex();
-		} catch (RuntimeException eR) {
-			eR.printStackTrace();
-			showDialog(eR.getMessage());
+	private boolean isIndexCreationFormValid() {
+		final String indexDirectoryPath = indexDirectoryTextField.getText();
+		if (indexDirectoryPath.isEmpty() || !isDirectoryPath(indexDirectoryPath)) {
+			indexDirectoryTextField.setText("");
+			indexDirectoryTextField.requestFocus();
+
+			return false;
 		}
+
+		final String dataDirectoryPath = dataDirectoryTextField.getText();
+		if (dataDirectoryPath.isEmpty() || !isDirectoryPath(dataDirectoryPath)) {
+			dataDirectoryTextField.setText("");
+			dataDirectoryTextField.requestFocus();
+
+			return false;
+		}
+
+		final boolean noContentTypeSelected = !(bmpCheckBox.isSelected() || jpegCheckBox.isSelected() || pngCheckBox.isSelected());
+		if (noContentTypeSelected) {
+			bmpCheckBox.requestFocus();
+
+			return false;
+		}
+
+		return true;
+	}
+
+	private boolean isDirectoryPath(final String path) {
+		final Path file = Paths.get(path);
+
+		return Files.exists(file) && Files.isDirectory(file);
 	}
 
 	@FXML

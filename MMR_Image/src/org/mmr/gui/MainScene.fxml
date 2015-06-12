@@ -25,16 +25,17 @@
                      <children>
                         <Label layoutX="15.0" layoutY="15.0" text="Index folder:" />
                         <Label layoutX="15.0" layoutY="45.0" text="Data folder:" />
-                        <TextField fx:id="chooseIndexFolderTextField" editable="false" layoutX="105.0" layoutY="10.0" prefHeight="25.0" prefWidth="230.0" />
-                        <TextField fx:id="chooseDataFolderTextField" editable="false" layoutX="105.0" layoutY="40.0" prefHeight="25.0" prefWidth="230.0" />
+                        <TextField fx:id="indexDirectoryTextField" layoutX="105.0" layoutY="10.0" prefHeight="25.0" prefWidth="230.0" />
+                        <TextField fx:id="dataDirectoryTextField" layoutX="105.0" layoutY="40.0" prefHeight="25.0" prefWidth="230.0" />
                         <Button layoutX="335.0" layoutY="10.0" mnemonicParsing="false" onAction="#clickChooseIndexFolderButton" text="Choose" />
                         <Button layoutX="335.0" layoutY="40.0" mnemonicParsing="false" onAction="#clickChooseDataFolderButton" text="Choose" />
                         <Label layoutX="420.0" layoutY="15.0" text="Histogram bins:" />
                         <ChoiceBox fx:id="histogramBinsChoiceBox" layoutX="530.0" layoutY="10.0" prefHeight="25.0" prefWidth="70.0" />
-                        <CheckBox fx:id="jpegCheckBox" layoutX="482.0" layoutY="44.0" mnemonicParsing="false" selected="true" text="JPEG" />
-                        <CheckBox fx:id="pngCheckBox" layoutX="548.0" layoutY="44.0" mnemonicParsing="false" selected="true" text="PNG" />
-                        <CheckBox fx:id="bmpCheckBox" layoutX="420.0" layoutY="44.0" mnemonicParsing="false" selected="true" text="BMP" />
-                        <Button layoutX="615.0" layoutY="13.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="100.0" text="Create" />
+                        <CheckBox fx:id="jpegCheckBox" layoutX="482.0" layoutY="44.0" mnemonicParsing="false" text="JPEG" />
+                        <CheckBox fx:id="pngCheckBox" layoutX="548.0" layoutY="44.0" mnemonicParsing="false" text="PNG" />
+                        <CheckBox fx:id="bmpCheckBox" layoutX="420.0" layoutY="44.0" mnemonicParsing="false" text="BMP" />
+                        <Button fx:id="createIndexButton" defaultButton="true" layoutX="615.0" layoutY="13.0" mnemonicParsing="false" onAction="#clickCreateIndexButton" prefHeight="50.0" prefWidth="100.0" text="Create" />
+                        <ProgressIndicator fx:id="createIndexProgressIndicator" layoutX="645.0" layoutY="18.0" prefHeight="40.0" prefWidth="40.0" visible="false" />
                      </children>
                   </AnchorPane>
               </content>
