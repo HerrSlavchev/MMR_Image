@@ -13,49 +13,109 @@ import java.util.Set;
  */
 public final class Context {
 
-    private static Path chosenDirectory;
-    private static int bins;
-    private static List<DocumentBean> documents = new ArrayList<>();
-    private static final Set<EContentType> allowedContentTypes = new HashSet<>();
+	private static Path indexDirectory;
 
-    static {
-        // Default allowed content types are initialized.
-        bins = 64;
-        allowedContentTypes.add(EContentType.PNG);
-        allowedContentTypes.add(EContentType.BMP);
-    }
+	private static Path dataDirectory;
 
-    public static Optional<Path> getChosenDirectory() {
-        return Optional.ofNullable(chosenDirectory);
-    }
+	private static int histogramBinCount;
 
-    public static void setChosenDirectory(final Path directory) {
-        chosenDirectory = directory;
-    }
+	private static final Set<EContentType> allowedContentTypes = new HashSet<>();
 
-    public static Set<EContentType> getAllowedContentTypes() {
-        return allowedContentTypes;
-    }
+	private static DocumentBean queryDocument;
 
-    public static void setAllowedContentTypes(final Collection<EContentType> contentTypes) {
-        allowedContentTypes.clear();
-        allowedContentTypes.addAll(contentTypes);
-    }
+	private static float hueSimilarityImportance;
 
-    public static List<DocumentBean> getDocuments() {
-        return documents;
-    }
+	private static float saturationSimilarityImportance;
 
-    public static void setDocuments(List<DocumentBean> docs) {
-        documents = docs;
-    }
+	private static float brightnessSimilarityImportance;
 
-    public static int getBins() {
-        return bins;
-    }
+	private static final List<DocumentBean> similarDocuments = new ArrayList<>();
 
-    public static void setBins(int number) {
-        bins = number;
-    }
+	static {
+		// Default values are initialized.
+		histogramBinCount = 64;
+
+		allowedContentTypes.add(EContentType.BMP);
+		allowedContentTypes.add(EContentType.JPEG);
+		allowedContentTypes.add(EContentType.PNG);
+
+		hueSimilarityImportance = 0.33f;
+		saturationSimilarityImportance = 0.33f;
+		brightnessSimilarityImportance = 0.33f;
+	}
+
+	public static Optional<Path> getIndexDirectory() {
+		return Optional.ofNullable(indexDirectory);
+	}
+
+	public static void setIndexDirectory(final Path directory) {
+		indexDirectory = directory;
+	}
+
+	public static Optional<Path> getDataDirectory() {
+		return Optional.ofNullable(dataDirectory);
+	}
+
+	public static void setDataDirectory(final Path directory) {
+		dataDirectory = directory;
+	}
+
+	public static int getHistogramBinCount() {
+		return histogramBinCount;
+	}
+
+	public static void setHistogramBinCount(final int count) {
+		histogramBinCount = count;
+	}
+
+	public static Set<EContentType> getAllowedContentTypes() {
+		return allowedContentTypes;
+	}
+
+	public static void setAllowedContentTypes(final Collection<EContentType> contentTypes) {
+		allowedContentTypes.clear();
+		allowedContentTypes.addAll(contentTypes);
+	}
+
+	public static Optional<DocumentBean> getQueryDocument() {
+		return Optional.ofNullable(queryDocument);
+	}
+
+	public static void setQueryDocument(final DocumentBean document) {
+		queryDocument = document;
+	}
+
+	public static float getHueSimilarityImportance() {
+		return hueSimilarityImportance;
+	}
+
+	public static void setHueSimilarityImportance(final float similarityImportance) {
+		hueSimilarityImportance = similarityImportance;
+	}
+
+	public static float getSaturationSimilarityImportance() {
+		return saturationSimilarityImportance;
+	}
+
+	public static void setSaturationSimilarityImportance(final float similarityImportance) {
+		saturationSimilarityImportance = similarityImportance;
+	}
+
+	public static float getBrightnessSimilarityImportance() {
+		return brightnessSimilarityImportance;
+	}
+
+	public static void setBrightnessSimilarityImportance(final float similarityImportance) {
+		brightnessSimilarityImportance = similarityImportance;
+	}
+
+	public static List<DocumentBean> getDocuments() {
+		return similarDocuments;
+	}
+
+	public static void setDocuments(final List<DocumentBean> documents) {
+		similarDocuments.clear();
+		similarDocuments.addAll(documents);
+	}
 
 }

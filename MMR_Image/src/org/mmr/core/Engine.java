@@ -28,7 +28,7 @@ public final class Engine {
      */
     public static final void createIndex() {
 
-        final Optional<Path> chosenDirectory = Context.getChosenDirectory();
+        final Optional<Path> chosenDirectory = Context.getDataDirectory();
 
         if (chosenDirectory.isPresent()) {
             final Set<EContentType> allowedContentTypes = Context.getAllowedContentTypes();

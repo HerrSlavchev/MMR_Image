@@ -7,7 +7,7 @@ import java.util.Optional;
  */
 public enum EContentType {
 
-    BMP("image/x-ms-bmp"), JPEG("image/jpeg"), PNG("image/png"), TIFF("image/tiff");
+    BMP("image/x-ms-bmp"), JPEG("image/jpeg"), PNG("image/png");
 
     private final String value;
 

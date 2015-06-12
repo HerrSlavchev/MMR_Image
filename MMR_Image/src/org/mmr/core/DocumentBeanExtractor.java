@@ -31,7 +31,7 @@ public class DocumentBeanExtractor {
 
 	private static DocumentBean getDocumentBean(final Path path) throws IOException {
             
-                final int bins = Context.getBins();
+                final int bins = Context.getHistogramBinCount();
                 
 		final String absolutePath = path.toAbsolutePath().toString();
 
