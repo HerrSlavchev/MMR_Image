@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.chart.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.geometry.*?>
 <?import java.lang.*?>
@@ -8,54 +9,69 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.mmr.gui.MainSceneController">
-  <columnConstraints>
-    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-  </columnConstraints>
-  <rowConstraints>
-    <RowConstraints maxHeight="391.0" minHeight="10.0" prefHeight="102.0" vgrow="SOMETIMES" />
-    <RowConstraints maxHeight="712.0" minHeight="10.0" prefHeight="698.0" vgrow="SOMETIMES" />
-  </rowConstraints>
+
+<AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.mmr.gui.MainSceneController">
    <children>
-      <AnchorPane>
-         <children>
-            <TitledPane animated="false" collapsible="false" prefHeight="225.0" prefWidth="1000.0" text="Index creation" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-              <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                     <children>
-                        <Label layoutX="15.0" layoutY="15.0" text="Index folder:" />
-                        <Label layoutX="15.0" layoutY="45.0" text="Data folder:" />
-                        <TextField fx:id="indexDirectoryTextField" layoutX="105.0" layoutY="10.0" prefHeight="25.0" prefWidth="230.0" />
-                        <TextField fx:id="dataDirectoryTextField" layoutX="105.0" layoutY="40.0" prefHeight="25.0" prefWidth="230.0" />
-                        <Button layoutX="335.0" layoutY="10.0" mnemonicParsing="false" onAction="#clickChooseIndexFolderButton" text="Choose" />
-                        <Button layoutX="335.0" layoutY="40.0" mnemonicParsing="false" onAction="#clickChooseDataFolderButton" text="Choose" />
-                        <Label layoutX="420.0" layoutY="15.0" text="Histogram bins:" />
-                        <ChoiceBox fx:id="histogramBinsChoiceBox" layoutX="530.0" layoutY="10.0" prefHeight="25.0" prefWidth="70.0" />
-                        <CheckBox fx:id="jpegCheckBox" layoutX="482.0" layoutY="44.0" mnemonicParsing="false" text="JPEG" />
-                        <CheckBox fx:id="pngCheckBox" layoutX="548.0" layoutY="44.0" mnemonicParsing="false" text="PNG" />
-                        <CheckBox fx:id="bmpCheckBox" layoutX="420.0" layoutY="44.0" mnemonicParsing="false" text="BMP" />
-                        <Button fx:id="createIndexButton" defaultButton="true" layoutX="615.0" layoutY="13.0" mnemonicParsing="false" onAction="#clickCreateIndexButton" prefHeight="50.0" prefWidth="100.0" text="Create" />
-                        <ProgressIndicator fx:id="createIndexProgressIndicator" layoutX="645.0" layoutY="18.0" prefHeight="40.0" prefWidth="40.0" visible="false" />
-                     </children>
-                  </AnchorPane>
-              </content>
-               <font>
-                  <Font name="System Bold" size="13.0" />
-               </font>
-            </TitledPane>
-         </children>
-      </AnchorPane>
-      <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
-         <children>
-            <TitledPane animated="false" collapsible="false" layoutX="43.0" layoutY="141.0" prefHeight="575.0" prefWidth="1000.0" text="Data exploration" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-              <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-              </content>
-               <font>
-                  <Font name="System Bold" size="13.0" />
-               </font>
-            </TitledPane>
-         </children>
-      </AnchorPane>
+      <SplitPane dividerPositions="0.13" orientation="VERTICAL" prefHeight="800.0" prefWidth="1000.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <items>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+               <children>
+                  <TitledPane animated="false" collapsible="false" prefHeight="395.0" prefWidth="998.0" text="Index creation" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <content>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <Label layoutX="15.0" layoutY="15.0" text="Index folder:" />
+                              <Label layoutX="15.0" layoutY="45.0" text="Data folder:" />
+                              <TextField fx:id="indexDirectoryTextField" layoutX="105.0" layoutY="10.0" prefHeight="25.0" prefWidth="230.0" />
+                              <TextField fx:id="dataDirectoryTextField" layoutX="105.0" layoutY="40.0" prefHeight="25.0" prefWidth="230.0" />
+                              <Button layoutX="335.0" layoutY="10.0" mnemonicParsing="false" onAction="#clickChooseIndexFolderButton" text="Choose" />
+                              <Button layoutX="335.0" layoutY="40.0" mnemonicParsing="false" onAction="#clickChooseDataFolderButton" text="Choose" />
+                              <Label layoutX="420.0" layoutY="15.0" text="Histogram bins:" />
+                              <ChoiceBox fx:id="histogramBinsChoiceBox" layoutX="530.0" layoutY="10.0" prefHeight="25.0" prefWidth="70.0" />
+                              <CheckBox fx:id="jpegCheckBox" layoutX="482.0" layoutY="44.0" mnemonicParsing="false" text="JPEG" />
+                              <CheckBox fx:id="pngCheckBox" layoutX="548.0" layoutY="44.0" mnemonicParsing="false" text="PNG" />
+                              <CheckBox fx:id="bmpCheckBox" layoutX="420.0" layoutY="44.0" mnemonicParsing="false" text="BMP" />
+                              <Button fx:id="createIndexButton" defaultButton="true" layoutX="615.0" layoutY="13.0" mnemonicParsing="false" onAction="#clickCreateIndexButton" prefHeight="50.0" prefWidth="100.0" text="Create" />
+                              <ProgressIndicator fx:id="createIndexProgressIndicator" layoutX="645.0" layoutY="18.0" prefHeight="40.0" prefWidth="40.0" visible="false" />
+                           </children>
+                        </AnchorPane>
+                    </content>
+                     <font>
+                        <Font name="System Bold" size="13.0" />
+                     </font>
+                  </TitledPane>
+               </children>
+            </AnchorPane>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+               <children>
+                  <TitledPane animated="false" collapsible="false" prefHeight="395.0" prefWidth="998.0" text="Data exploration" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <font>
+                        <Font name="System Bold" size="13.0" />
+                     </font>
+                     <content>
+                        <SplitPane dividerPositions="0.22322775263951736" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0">
+                          <items>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                                 <children>
+                                    <Label layoutX="14.0" layoutY="15.0" text="Query file:" />
+                                    <TextField layoutX="105.0" layoutY="10.0" prefHeight="25.0" prefWidth="230.0" />
+                                    <Button layoutX="335.0" layoutY="10.0" mnemonicParsing="false" onAction="#clickChooseIndexFolderButton" text="Choose" />
+                                    <Label layoutX="14.0" layoutY="45.0" prefHeight="15.0" prefWidth="264.0" text="Hue-Saturation-Brightness importance: " />
+                                    <TextField layoutX="280.0" layoutY="40.0" prefHeight="25.0" prefWidth="25.0" />
+                                    <TextField layoutX="320.0" layoutY="40.0" prefHeight="25.0" prefWidth="25.0" />
+                                    <TextField layoutX="360.0" layoutY="40.0" prefHeight="25.0" prefWidth="25.0" />
+                                    <Label layoutX="310.0" layoutY="45.0" prefHeight="15.0" prefWidth="0.0" text="-" />
+                                    <Label layoutX="350.0" layoutY="45.0" prefHeight="15.0" prefWidth="0.0" text="-" />
+                                 </children>
+                              </AnchorPane>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0" />
+                          </items>
+                        </SplitPane>
+                     </content>
+                  </TitledPane>
+               </children>
+            </AnchorPane>
+        </items>
+      </SplitPane>
    </children>
-</GridPane>
+</AnchorPane>

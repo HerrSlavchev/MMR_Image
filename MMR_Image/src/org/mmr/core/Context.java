@@ -23,11 +23,11 @@ public final class Context {
 
 	private static DocumentBean queryDocument;
 
-	private static float hueSimilarityImportance;
+	private static float hueImportance;
 
-	private static float saturationSimilarityImportance;
+	private static float saturationImportance;
 
-	private static float brightnessSimilarityImportance;
+	private static float brightnessImportance;
 
 	private static final List<DocumentBean> similarDocuments = new ArrayList<>();
 
@@ -39,9 +39,9 @@ public final class Context {
 		allowedContentTypes.add(EContentType.JPEG);
 		allowedContentTypes.add(EContentType.PNG);
 
-		hueSimilarityImportance = 0.33f;
-		saturationSimilarityImportance = 0.33f;
-		brightnessSimilarityImportance = 0.33f;
+		hueImportance = 0.33f;
+		saturationImportance = 0.33f;
+		brightnessImportance = 0.33f;
 	}
 
 	public static Optional<Path> getIndexDirectory() {
@@ -85,28 +85,28 @@ public final class Context {
 		queryDocument = document;
 	}
 
-	public static float getHueSimilarityImportance() {
-		return hueSimilarityImportance;
+	public static float getHueImportance() {
+		return hueImportance;
 	}
 
-	public static void setHueSimilarityImportance(final float similarityImportance) {
-		hueSimilarityImportance = similarityImportance;
+	public static void setHueImportance(final float importance) {
+		hueImportance = importance;
 	}
 
-	public static float getSaturationSimilarityImportance() {
-		return saturationSimilarityImportance;
+	public static float getSaturationImportance() {
+		return saturationImportance;
 	}
 
-	public static void setSaturationSimilarityImportance(final float similarityImportance) {
-		saturationSimilarityImportance = similarityImportance;
+	public static void setSaturationImportance(final float importance) {
+		saturationImportance = importance;
 	}
 
-	public static float getBrightnessSimilarityImportance() {
-		return brightnessSimilarityImportance;
+	public static float getBrightnessImportance() {
+		return brightnessImportance;
 	}
 
-	public static void setBrightnessSimilarityImportance(final float similarityImportance) {
-		brightnessSimilarityImportance = similarityImportance;
+	public static void setBrightnessImportance(final float importance) {
+		brightnessImportance = importance;
 	}
 
 	public static List<DocumentBean> getDocuments() {
