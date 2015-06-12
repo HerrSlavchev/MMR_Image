@@ -14,6 +14,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -27,6 +28,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
@@ -37,6 +39,9 @@ import org.mmr.core.Context;
 import org.mmr.core.EContentType;
 
 public class MainSceneController implements Initializable {
+
+	@FXML
+	private TitledPane indexCreationTitledPane;
 
 	@FXML
 	private TextField indexDirectoryTextField;
@@ -91,6 +96,13 @@ public class MainSceneController implements Initializable {
 
 	@Override
 	public void initialize(final URL url, final ResourceBundle resourceBundle) {
+		indexCreationTitledPane.setOnKeyPressed((keyEvent) -> {
+			if (keyEvent.getCode().equals(KeyCode.ENTER)) {
+				createIndexButton.requestFocus();
+				clickCreateIndexButton(null);
+			}
+		});
+
 		histogramBinsChoiceBox.setItems(FXCollections.observableArrayList(8, 16, 32, 64, 128, 256));
 		histogramBinsChoiceBox.setValue(Context.getHistogramBinCount());
 
@@ -104,6 +116,12 @@ public class MainSceneController implements Initializable {
 		pngCheckBox.setSelected(allowedContentTypes.contains(EContentType.PNG));
 
 		dataExplorationTitledPane.setDisable(true);
+		dataExplorationTitledPane.setOnKeyPressed((keyEvent) -> {
+			if (keyEvent.getCode().equals(KeyCode.ENTER)) {
+				searchButton.requestFocus();
+				clickSearchButton(null);
+			}
+		});
 
 		queryFileChooser.setTitle("Choose a query file");
 		queryFileChooser.getExtensionFilters().add(getSupportedExtensionFilter());
@@ -111,6 +129,8 @@ public class MainSceneController implements Initializable {
 		hueImportanceTextField.setText(Context.getHueImportance() + "");
 		saturationImportanceTextField.setText(Context.getSaturationImportance() + "");
 		brightnessImportanceTextField.setText(Context.getBrightnessImportance() + "");
+
+		Platform.runLater(() -> indexDirectoryTextField.requestFocus());
 	}
 
 	private FileChooser.ExtensionFilter getSupportedExtensionFilter() {
@@ -180,6 +200,7 @@ public class MainSceneController implements Initializable {
 			Context.setAllowedContentTypes(selectedContentTypes);
 
 			dataExplorationTitledPane.setDisable(false);
+			queryFileTextField.requestFocus();
 		}
 
 		createIndexButton.setDisable(false);
