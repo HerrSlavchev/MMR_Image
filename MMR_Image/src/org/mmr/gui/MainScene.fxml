@@ -9,7 +9,6 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-
 <AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.mmr.gui.MainSceneController">
    <children>
       <SplitPane dividerPositions="0.13" orientation="VERTICAL" prefHeight="800.0" prefWidth="1000.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -44,27 +43,29 @@
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                <children>
-                  <TitledPane animated="false" collapsible="false" prefHeight="395.0" prefWidth="998.0" text="Data exploration" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <TitledPane fx:id="dataExplorationTitledPane" animated="false" collapsible="false" prefHeight="395.0" prefWidth="998.0" text="Data exploration" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <font>
                         <Font name="System Bold" size="13.0" />
                      </font>
                      <content>
-                        <SplitPane dividerPositions="0.22322775263951736" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0">
+                        <SplitPane dividerPositions="0.11764705882352941" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0">
                           <items>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                                  <children>
                                     <Label layoutX="14.0" layoutY="15.0" text="Query file:" />
-                                    <TextField layoutX="105.0" layoutY="10.0" prefHeight="25.0" prefWidth="230.0" />
-                                    <Button layoutX="335.0" layoutY="10.0" mnemonicParsing="false" onAction="#clickChooseIndexFolderButton" text="Choose" />
+                                    <TextField fx:id="queryFileTextField" layoutX="105.0" layoutY="10.0" prefHeight="25.0" prefWidth="230.0" />
+                                    <Button layoutX="335.0" layoutY="10.0" mnemonicParsing="false" onAction="#clickChooseQueryFileButton" text="Choose" />
                                     <Label layoutX="14.0" layoutY="45.0" prefHeight="15.0" prefWidth="264.0" text="Hue-Saturation-Brightness importance: " />
-                                    <TextField layoutX="280.0" layoutY="40.0" prefHeight="25.0" prefWidth="25.0" />
-                                    <TextField layoutX="320.0" layoutY="40.0" prefHeight="25.0" prefWidth="25.0" />
-                                    <TextField layoutX="360.0" layoutY="40.0" prefHeight="25.0" prefWidth="25.0" />
-                                    <Label layoutX="310.0" layoutY="45.0" prefHeight="15.0" prefWidth="0.0" text="-" />
-                                    <Label layoutX="350.0" layoutY="45.0" prefHeight="15.0" prefWidth="0.0" text="-" />
+                                    <TextField fx:id="brightnessImportanceTextField" layoutX="375.0" layoutY="40.0" prefHeight="25.0" prefWidth="40.0" />
+                                    <Label layoutX="367.5" layoutY="45.0" prefHeight="15.0" prefWidth="0.0" text="-" />
+                                    <Label layoutX="317.5" layoutY="45.0" prefHeight="15.0" prefWidth="0.0" text="-" />
+                                    <TextField fx:id="saturationImportanceTextField" layoutX="325.0" layoutY="40.0" prefHeight="25.0" prefWidth="40.0" />
+                                    <TextField fx:id="hueImportanceTextField" layoutX="275.0" layoutY="40.0" prefHeight="25.0" prefWidth="40.0" />
+                                    <Button fx:id="searchButton" defaultButton="true" layoutX="430.0" layoutY="13.0" mnemonicParsing="false" onAction="#clickSearchButton" prefHeight="50.0" prefWidth="100.0" text="Search" />
+                                    <ProgressIndicator fx:id="searchProgressIndicator" layoutX="460.0" layoutY="18.0" prefHeight="40.0" prefWidth="40.0" visible="false" />
                                  </children>
                               </AnchorPane>
-                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0" />
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="493.0" prefWidth="996.0" />
                           </items>
                         </SplitPane>
                      </content>

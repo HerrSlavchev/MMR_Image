@@ -7,27 +7,34 @@ import java.util.Optional;
  */
 public enum EContentType {
 
-    BMP("image/x-ms-bmp"), JPEG("image/jpeg"), PNG("image/png");
+	BMP("image/x-ms-bmp", "bmp"), JPEG("image/jpeg", "jpg"), PNG("image/png", "png");
 
-    private final String value;
+	private final String value;
 
-    private EContentType(final String value) {
-        this.value = value;
-    }
+	private final String extension;
 
-    public static final Optional<EContentType> of(final String value) {
-        for (final EContentType contentType : EContentType.values()) {
-            if (value.toLowerCase().startsWith(contentType.value)) {
-                return Optional.of(contentType);
-            }
-        }
+	private EContentType(final String value, final String extension) {
+		this.value = value;
+		this.extension = extension;
+	}
 
-        return Optional.empty();
-    }
+	public static final Optional<EContentType> of(final String value) {
+		for (final EContentType contentType : EContentType.values()) {
+			if (value.toLowerCase().startsWith(contentType.value)) {
+				return Optional.of(contentType);
+			}
+		}
 
-    @Override
-    public String toString() {
-        return value;
-    }
+		return Optional.empty();
+	}
+
+	public String getExtension() {
+		return extension;
+	}
+
+	@Override
+	public String toString() {
+		return value;
+	}
 
 }

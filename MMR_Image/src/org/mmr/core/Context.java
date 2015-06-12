@@ -39,9 +39,9 @@ public final class Context {
 		allowedContentTypes.add(EContentType.JPEG);
 		allowedContentTypes.add(EContentType.PNG);
 
-		hueImportance = 0.33f;
-		saturationImportance = 0.33f;
-		brightnessImportance = 0.33f;
+		hueImportance = 0.3f;
+		saturationImportance = 0.3f;
+		brightnessImportance = 0.3f;
 	}
 
 	public static Optional<Path> getIndexDirectory() {

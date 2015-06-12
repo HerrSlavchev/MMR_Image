@@ -1,18 +1,19 @@
 package org.mmr.gui;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -25,14 +26,14 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.VBoxBuilder;
+import javafx.scene.control.TitledPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.mmr.core.Context;
-import org.mmr.core.DocumentBean;
-import org.mmr.core.Engine;
 import org.mmr.core.EContentType;
 
 public class MainSceneController implements Initializable {
@@ -61,9 +62,32 @@ public class MainSceneController implements Initializable {
 	@FXML
 	private ProgressIndicator createIndexProgressIndicator;
 
+	@FXML
+	private TitledPane dataExplorationTitledPane;
+
+	@FXML
+	private TextField queryFileTextField;
+
+	@FXML
+	private TextField hueImportanceTextField;
+
+	@FXML
+	private TextField saturationImportanceTextField;
+
+	@FXML
+	private TextField brightnessImportanceTextField;
+
+	@FXML
+	private Button searchButton;
+
+	@FXML
+	private ProgressIndicator searchProgressIndicator;
+
 	private final DirectoryChooser indexDirectoryChooser = new DirectoryChooser();
 
 	private final DirectoryChooser dataDirectoryChooser = new DirectoryChooser();
+
+	private final FileChooser queryFileChooser = new FileChooser();
 
 	@Override
 	public void initialize(final URL url, final ResourceBundle resourceBundle) {
@@ -78,6 +102,23 @@ public class MainSceneController implements Initializable {
 		bmpCheckBox.setSelected(allowedContentTypes.contains(EContentType.BMP));
 		jpegCheckBox.setSelected(allowedContentTypes.contains(EContentType.JPEG));
 		pngCheckBox.setSelected(allowedContentTypes.contains(EContentType.PNG));
+
+		dataExplorationTitledPane.setDisable(true);
+
+		queryFileChooser.setTitle("Choose a query file");
+		queryFileChooser.getExtensionFilters().add(getSupportedExtensionFilter());
+
+		hueImportanceTextField.setText(Context.getHueImportance() + "");
+		saturationImportanceTextField.setText(Context.getSaturationImportance() + "");
+		brightnessImportanceTextField.setText(Context.getBrightnessImportance() + "");
+	}
+
+	private FileChooser.ExtensionFilter getSupportedExtensionFilter() {
+		final List<String> supportedExtensions = Arrays.stream(EContentType.values())
+				.map(contentType -> "*." + contentType.getExtension())
+				.collect(Collectors.toList());
+
+		return new FileChooser.ExtensionFilter("Image files", supportedExtensions);
 	}
 
 	@FXML
@@ -137,6 +178,8 @@ public class MainSceneController implements Initializable {
 			}
 
 			Context.setAllowedContentTypes(selectedContentTypes);
+
+			dataExplorationTitledPane.setDisable(false);
 		}
 
 		createIndexButton.setDisable(false);
@@ -144,19 +187,11 @@ public class MainSceneController implements Initializable {
 	}
 
 	private boolean isIndexCreationFormValid() {
-		final String indexDirectoryPath = indexDirectoryTextField.getText();
-		if (indexDirectoryPath.isEmpty() || !isDirectoryPath(indexDirectoryPath)) {
-			indexDirectoryTextField.setText("");
-			indexDirectoryTextField.requestFocus();
-
+		if (!isDirectoryPathTextField(indexDirectoryTextField)) {
 			return false;
 		}
 
-		final String dataDirectoryPath = dataDirectoryTextField.getText();
-		if (dataDirectoryPath.isEmpty() || !isDirectoryPath(dataDirectoryPath)) {
-			dataDirectoryTextField.setText("");
-			dataDirectoryTextField.requestFocus();
-
+		if (!isDirectoryPathTextField(dataDirectoryTextField)) {
 			return false;
 		}
 
@@ -170,46 +205,125 @@ public class MainSceneController implements Initializable {
 		return true;
 	}
 
-	private boolean isDirectoryPath(final String path) {
-		final Path file = Paths.get(path);
+	private boolean isDirectoryPathTextField(final TextField textField) {
+		final String directoryPath = textField.getText();
+		final Path directory = Paths.get(directoryPath);
 
-		return Files.exists(file) && Files.isDirectory(file);
+		if (directoryPath.trim().isEmpty() || !Files.exists(directory) || !Files.isDirectory(directory)) {
+			textField.requestFocus();
+
+			return false;
+		}
+
+		return true;
 	}
 
 	@FXML
-	private void jbSearchClicked(final ActionEvent actionEvent) {
-		final String query = null;//tfQuery.getText();
-
-		try {
-			final List<DocumentBean> documentBeans = Engine.search(query);
-
-			//taResults.setText(documentBeans.size() + " results:\n\n");
-			documentBeans.stream().forEach((documentBean) -> {
-				//	taResults.appendText(documentBean.toString() + "\n");
-			});
-		} catch (IOException /*| ParseException*/ exception) {
-			final String errorMessage = exception.getMessage();
-
-			Logger.getGlobal().log(Level.SEVERE, errorMessage, exception);
-		} catch (RuntimeException eR) {
-			eR.printStackTrace();
-			showDialog(eR.getMessage());
+	private void clickChooseQueryFileButton(final ActionEvent actionEvent) {
+		final Optional<File> queryFile = chooseFile(queryFileChooser);
+		if (queryFile.isPresent()) {
+			queryFileTextField.setText(queryFile.get().getAbsolutePath());
 		}
 	}
 
 	/**
-	 * Simple utility to show dialogs.
-	 *
-	 * @param message - the text to be shown.
+	 * Show a file chooser. Extra: remembers the last chosen directory.
 	 */
-	private void showDialog(String message) {
-		Stage dialogStage = new Stage();
+	private Optional<File> chooseFile(final FileChooser fileChooser) {
+		final File chosenFile = fileChooser.showOpenDialog(MainClass.getStage());
+		if (chosenFile != null) {
+			//save last choice
+			final File parentDirectory = chosenFile.getParentFile();
+			if (parentDirectory != null) {
+				fileChooser.setInitialDirectory(parentDirectory);
+			}
+		}
+
+		return Optional.ofNullable(chosenFile);
+	}
+
+	@FXML
+	private void clickSearchButton(final ActionEvent actionEvent) {
+		searchButton.setDisable(true);
+		searchProgressIndicator.setVisible(true);
+
+		if (isDataExplorationFormValid()) {
+			// TODO
+			Context.setQueryDocument(null);
+			Context.setHueImportance(Float.parseFloat(hueImportanceTextField.getText()));
+			Context.setSaturationImportance(Float.parseFloat(saturationImportanceTextField.getText()));
+			Context.setBrightnessImportance(Float.parseFloat(brightnessImportanceTextField.getText()));
+		}
+
+		searchButton.setDisable(false);
+		searchProgressIndicator.setVisible(false);
+	}
+
+	private boolean isDataExplorationFormValid() {
+		final String queryFilePath = queryFileTextField.getText();
+		final Path queryFile = Paths.get(queryFilePath);
+
+		if (queryFilePath.trim().isEmpty() || !Files.exists(queryFile) || Files.isDirectory(queryFile)) {
+			queryFileTextField.requestFocus();
+
+			return false;
+		}
+
+		if (!isFloatTextField(hueImportanceTextField)) {
+			return false;
+		}
+
+		if (!isFloatTextField(saturationImportanceTextField)) {
+			return false;
+		}
+
+		if (!isFloatTextField(brightnessImportanceTextField)) {
+			return false;
+		}
+
+		return true;
+	}
+
+	private boolean isFloatTextField(final TextField textField) {
+		final String floatAsString = textField.getText();
+		boolean floatTextField = true;
+
+		if (floatAsString.isEmpty()) {
+			floatTextField = false;
+		} else {
+			try {
+				Float.parseFloat(floatAsString);
+			} catch (final NumberFormatException exception) {
+				floatTextField = false;
+				Logger.getGlobal().log(Level.INFO, exception.getMessage(), exception);
+			}
+		}
+
+		if (!floatTextField) {
+			textField.requestFocus();
+		}
+
+		return floatTextField;
+	}
+
+	/**
+	 * Simple utility to show dialogs related to exceptions.
+	 */
+	private void logAndShowDialog(final Throwable throwable) {
+		Logger.getGlobal().log(Level.SEVERE, throwable.getMessage(), throwable);
+
+		final Stage dialogStage = new Stage();
 		dialogStage.setResizable(false);
 		dialogStage.setAlwaysOnTop(true);
 		dialogStage.initModality(Modality.APPLICATION_MODAL);
-		dialogStage.setScene(new Scene(VBoxBuilder.create().
-				children(new Text(message)).
-				alignment(Pos.CENTER).padding(new Insets(5)).build()));
+
+		final VBox vbox = new VBox();
+		vbox.getChildren().add(new Text(throwable.getMessage()));
+		vbox.setAlignment(Pos.CENTER);
+		vbox.setPadding(new Insets(5));
+
+		dialogStage.setScene(new Scene(vbox));
 		dialogStage.show();
 	}
+
 }
