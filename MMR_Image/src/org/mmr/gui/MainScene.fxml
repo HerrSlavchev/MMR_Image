@@ -17,8 +17,8 @@
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
         </columnConstraints>
         <rowConstraints>
-          <RowConstraints maxHeight="393.0" minHeight="10.0" prefHeight="104.0" vgrow="SOMETIMES" />
-          <RowConstraints maxHeight="727.0" minHeight="10.0" prefHeight="696.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="110.0" minHeight="110.0" prefHeight="110.0" valignment="TOP" vgrow="NEVER" />
+          <RowConstraints minHeight="690.0" prefHeight="690.0" valignment="TOP" vgrow="ALWAYS" />
         </rowConstraints>
          <children>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
@@ -61,8 +61,8 @@
                               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
                            </columnConstraints>
                            <rowConstraints>
-                              <RowConstraints maxHeight="400.0" minHeight="10.0" prefHeight="74.0" vgrow="SOMETIMES" />
-                              <RowConstraints maxHeight="576.0" minHeight="10.0" prefHeight="575.0" vgrow="SOMETIMES" />
+                              <RowConstraints maxHeight="80.0" minHeight="80.0" prefHeight="80.0" valignment="TOP" vgrow="NEVER" />
+                              <RowConstraints minHeight="575.0" prefHeight="575.0" valignment="TOP" vgrow="ALWAYS" />
                            </rowConstraints>
                            <children>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="156.0" prefWidth="978.0">
