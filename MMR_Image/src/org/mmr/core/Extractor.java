@@ -53,7 +53,7 @@ public class Extractor {
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
 
-				final int[] rgb = new int[3];
+				final int[] rgb = new int[4];
 				raster.getPixel(x, y, rgb);
 				tmpValues = Fuzzyfier.extractValuesForIndex(rgb[0], 0, 255, bins);
 				Fuzzyfier.updateHistogram(tmpValues, red);

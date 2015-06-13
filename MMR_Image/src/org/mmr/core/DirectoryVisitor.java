@@ -23,7 +23,7 @@ final class DirectoryVisitor implements FileVisitor<Path> {
 	public FileVisitResult visitFile(final Path file, final BasicFileAttributes attributes) throws IOException {
 		final Optional<Document> document = Extractor.extract(file, true);
 		if (document.isPresent()) {
-			// TODO add to index and context(optional)
+			Context.getAllDocuments().add(document.get());
 		}
 
 		return FileVisitResult.CONTINUE;

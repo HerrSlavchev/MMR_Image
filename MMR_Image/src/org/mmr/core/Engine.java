@@ -27,6 +27,7 @@ public final class Engine {
 			throw new RuntimeException("Before index creation: No allowed content types in context!");
 		}
 
+                Context.reset();
 		Files.walkFileTree(Context.getDataDirectory().get(), new DirectoryVisitor());
 	}
 
