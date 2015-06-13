@@ -2,8 +2,8 @@ package org.mmr.core;
 
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public final class Engine {
 
@@ -27,7 +27,7 @@ public final class Engine {
 			throw new RuntimeException("Before index creation: No allowed content types in context!");
 		}
 
-                Context.reset();
+		Context.reset();
 		Files.walkFileTree(Context.getDataDirectory().get(), new DirectoryVisitor());
 	}
 
@@ -36,7 +36,7 @@ public final class Engine {
 			throw new RuntimeException("Before search: No query document in context!");
 		}
 
-		return new ArrayList<>();
+		return Context.getAllDocuments().stream().map((document) -> new Similarity(document, 1)).collect(Collectors.toList());
 	}
 
 }
