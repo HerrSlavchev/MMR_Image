@@ -25,7 +25,8 @@ import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
-import javafx.scene.chart.XYChart;
+import javafx.scene.chart.XYChart.Data;
+import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
@@ -46,6 +47,8 @@ import javafx.stage.Stage;
 import org.mmr.core.Context;
 import org.mmr.core.Document;
 import org.mmr.core.EContentType;
+import org.mmr.core.Engine;
+import org.mmr.core.Extractor;
 
 public class MainSceneController implements Initializable {
 
@@ -80,7 +83,7 @@ public class MainSceneController implements Initializable {
 	private TitledPane dataExplorationTitledPane;
 
 	@FXML
-	private TextField queryFileTextField;
+	private TextField queryDocumentTextField;
 
 	@FXML
 	private TextField hueImportanceTextField;
@@ -98,13 +101,13 @@ public class MainSceneController implements Initializable {
 	private ProgressIndicator searchProgressIndicator;
 
 	@FXML
-	private GridPane queryFileGridPane;
+	private GridPane queryDocumentGridPane;
 
 	private final DirectoryChooser indexDirectoryChooser = new DirectoryChooser();
 
 	private final DirectoryChooser dataDirectoryChooser = new DirectoryChooser();
 
-	private final FileChooser queryFileChooser = new FileChooser();
+	private final FileChooser queryDocumentChooser = new FileChooser();
 
 	@Override
 	public void initialize(final URL url, final ResourceBundle resourceBundle) {
@@ -135,8 +138,8 @@ public class MainSceneController implements Initializable {
 			}
 		});
 
-		queryFileChooser.setTitle("Choose a query file");
-		queryFileChooser.getExtensionFilters().add(getSupportedExtensionFilter());
+		queryDocumentChooser.setTitle("Choose a query file");
+		queryDocumentChooser.getExtensionFilters().add(getSupportedExtensionFilter());
 
 		hueImportanceTextField.setText(Context.getHueImportance() + "");
 		saturationImportanceTextField.setText(Context.getSaturationImportance() + "");
@@ -211,8 +214,9 @@ public class MainSceneController implements Initializable {
 
 			Context.setAllowedContentTypes(selectedContentTypes);
 
+			// TODO Engine.createIndex();
 			dataExplorationTitledPane.setDisable(false);
-			queryFileTextField.requestFocus();
+			queryDocumentTextField.requestFocus();
 		}
 
 		createIndexButton.setDisable(false);
@@ -253,9 +257,9 @@ public class MainSceneController implements Initializable {
 
 	@FXML
 	private void clickChooseQueryFileButton(final ActionEvent actionEvent) {
-		final Optional<File> queryFile = chooseFile(queryFileChooser);
+		final Optional<File> queryFile = chooseFile(queryDocumentChooser);
 		if (queryFile.isPresent()) {
-			queryFileTextField.setText(queryFile.get().getAbsolutePath());
+			queryDocumentTextField.setText(queryFile.get().getAbsolutePath());
 		}
 	}
 
@@ -281,25 +285,41 @@ public class MainSceneController implements Initializable {
 		searchProgressIndicator.setVisible(true);
 
 		if (isDataExplorationFormValid()) {
-			//TODO
-			Context.setQueryDocument(null);
-			Context.setHueImportance(Float.parseFloat(hueImportanceTextField.getText()));
-			Context.setSaturationImportance(Float.parseFloat(saturationImportanceTextField.getText()));
-			Context.setBrightnessImportance(Float.parseFloat(brightnessImportanceTextField.getText()));
+			try {
+				final Path queryDocumentPath = Paths.get(queryDocumentTextField.getText());
+				final Optional<Document> queryDocument = Extractor.extract(queryDocumentPath, false);
 
-			updateQueryFilePresentation(null);
+				if (queryDocument.isPresent()) {
+					final Document presentQueryDocument = queryDocument.get();
 
-			searchButton.setDisable(false);
-			searchProgressIndicator.setVisible(false);
+					Context.setQueryDocument(presentQueryDocument);
+					Context.setHueImportance(Float.parseFloat(hueImportanceTextField.getText()));
+					Context.setSaturationImportance(Float.parseFloat(saturationImportanceTextField.getText()));
+					Context.setBrightnessImportance(Float.parseFloat(brightnessImportanceTextField.getText()));
+
+					updateQueryDocumentPresentation(presentQueryDocument);
+
+					Engine.search().forEach((similarity) -> {
+						// TODO
+					});
+				} else {
+					queryDocumentTextField.requestFocus();
+				}
+			} catch (final Throwable throwable) {
+				logAndShowDialog(throwable);
+			}
 		}
+
+		searchButton.setDisable(false);
+		searchProgressIndicator.setVisible(false);
 	}
 
 	private boolean isDataExplorationFormValid() {
-		final String queryFilePath = queryFileTextField.getText();
+		final String queryFilePath = queryDocumentTextField.getText();
 		final Path queryFile = Paths.get(queryFilePath);
 
 		if (queryFilePath.trim().isEmpty() || !Files.exists(queryFile) || Files.isDirectory(queryFile)) {
-			queryFileTextField.requestFocus();
+			queryDocumentTextField.requestFocus();
 
 			return false;
 		}
@@ -319,42 +339,51 @@ public class MainSceneController implements Initializable {
 		return true;
 	}
 
-	private void updateQueryFilePresentation(final Document documentBean) {
-		queryFileGridPane.getChildren().clear();
+	private void updateQueryDocumentPresentation(final Document documentBean) {
+		queryDocumentGridPane.getChildren().clear();
 
-		final Pane queryFileImageViewPane = new Pane();
+		final Pane queryDocumentImageViewPane = new Pane();
 
-		final ImageView queryFileImageView = new ImageView();
-		queryFileImageView.setImage(new Image("file:" + queryFileTextField.getText(), true));
-		queryFileImageView.setPreserveRatio(true);
-		queryFileImageView.setSmooth(true);
-		queryFileImageView.fitWidthProperty().bind(queryFileImageViewPane.widthProperty());
-		queryFileImageView.fitHeightProperty().bind(queryFileImageViewPane.heightProperty());
+		final ImageView queryDocumentImageView = new ImageView();
+		queryDocumentImageView.setImage(new Image("file:" + queryDocumentTextField.getText(), true));
+		queryDocumentImageView.setPreserveRatio(true);
+		queryDocumentImageView.setSmooth(true);
+		queryDocumentImageView.fitWidthProperty().bind(queryDocumentImageViewPane.widthProperty());
+		queryDocumentImageView.fitHeightProperty().bind(queryDocumentImageViewPane.heightProperty());
 
-		queryFileImageViewPane.getChildren().add(queryFileImageView);
-		queryFileGridPane.add(queryFileImageViewPane, 0, 0);
+		queryDocumentImageViewPane.getChildren().add(queryDocumentImageView);
+		queryDocumentGridPane.add(queryDocumentImageViewPane, 0, 0);
 
+		final float[][] histogramHSB = documentBean.getHistrogramHSB();
+		queryDocumentGridPane.add(createHistogram("Hue", histogramHSB[0]), 1, 0);
+		queryDocumentGridPane.add(createHistogram("Saturation", histogramHSB[1]), 2, 0);
+		queryDocumentGridPane.add(createHistogram("Brightness", histogramHSB[2]), 3, 0);
+	}
+
+	private BarChart<String, Number> createHistogram(final String name, final float[] values) {
 		final CategoryAxis xAxis = new CategoryAxis();
 		final NumberAxis yAxis = new NumberAxis();
 		final BarChart<String, Number> barChart = new BarChart<>(xAxis, yAxis);
-		barChart.setTitle("Hue");
+
+		barChart.setTitle(name);
 		barChart.setBarGap(0);
-		/*
-		final float[] hue = documentBean.getHistrogramHSB()[1];
+		barChart.setLegendVisible(false);
 
-		System.out.println(hue.length);
+		for (int index = 0; index < values.length; index++) {
+			final Series series = new Series();
 
-		for (int i = 0; i < hue.length; i++) {
-			float j = hue[i];
-			System.out.println(j);
-			XYChart.Series series = new XYChart.Series();
-			series.getData().add(new XYChart.Data("", j));
+			final Data data = new Data("", values[index]);
+			data.nodeProperty().addListener((x, y, node) -> {
+				if (node != null) {
+					data.getNode().setStyle("-fx-bar-fill: skyblue;");
+				}
+			});
+			series.getData().add(data);
 
 			barChart.getData().add(series);
 		}
 
-		queryFileGridPane.add(barChart, 1, 0);
-		*/
+		return barChart;
 	}
 
 	private boolean isFloatTextField(final TextField textField) {
