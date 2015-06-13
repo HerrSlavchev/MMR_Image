@@ -22,13 +22,21 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
@@ -36,6 +44,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.mmr.core.Context;
+import org.mmr.core.Document;
 import org.mmr.core.EContentType;
 
 public class MainSceneController implements Initializable {
@@ -87,6 +96,9 @@ public class MainSceneController implements Initializable {
 
 	@FXML
 	private ProgressIndicator searchProgressIndicator;
+
+	@FXML
+	private GridPane queryFileGridPane;
 
 	private final DirectoryChooser indexDirectoryChooser = new DirectoryChooser();
 
@@ -269,15 +281,17 @@ public class MainSceneController implements Initializable {
 		searchProgressIndicator.setVisible(true);
 
 		if (isDataExplorationFormValid()) {
-			// TODO
+			//TODO
 			Context.setQueryDocument(null);
 			Context.setHueImportance(Float.parseFloat(hueImportanceTextField.getText()));
 			Context.setSaturationImportance(Float.parseFloat(saturationImportanceTextField.getText()));
 			Context.setBrightnessImportance(Float.parseFloat(brightnessImportanceTextField.getText()));
-		}
 
-		searchButton.setDisable(false);
-		searchProgressIndicator.setVisible(false);
+			updateQueryFilePresentation(null);
+
+			searchButton.setDisable(false);
+			searchProgressIndicator.setVisible(false);
+		}
 	}
 
 	private boolean isDataExplorationFormValid() {
@@ -303,6 +317,44 @@ public class MainSceneController implements Initializable {
 		}
 
 		return true;
+	}
+
+	private void updateQueryFilePresentation(final Document documentBean) {
+		queryFileGridPane.getChildren().clear();
+
+		final Pane queryFileImageViewPane = new Pane();
+
+		final ImageView queryFileImageView = new ImageView();
+		queryFileImageView.setImage(new Image("file:" + queryFileTextField.getText(), true));
+		queryFileImageView.setPreserveRatio(true);
+		queryFileImageView.setSmooth(true);
+		queryFileImageView.fitWidthProperty().bind(queryFileImageViewPane.widthProperty());
+		queryFileImageView.fitHeightProperty().bind(queryFileImageViewPane.heightProperty());
+
+		queryFileImageViewPane.getChildren().add(queryFileImageView);
+		queryFileGridPane.add(queryFileImageViewPane, 0, 0);
+
+		final CategoryAxis xAxis = new CategoryAxis();
+		final NumberAxis yAxis = new NumberAxis();
+		final BarChart<String, Number> barChart = new BarChart<>(xAxis, yAxis);
+		barChart.setTitle("Hue");
+		barChart.setBarGap(0);
+		/*
+		final float[] hue = documentBean.getHistrogramHSB()[1];
+
+		System.out.println(hue.length);
+
+		for (int i = 0; i < hue.length; i++) {
+			float j = hue[i];
+			System.out.println(j);
+			XYChart.Series series = new XYChart.Series();
+			series.getData().add(new XYChart.Data("", j));
+
+			barChart.getData().add(series);
+		}
+
+		queryFileGridPane.add(barChart, 1, 0);
+		*/
 	}
 
 	private boolean isFloatTextField(final TextField textField) {

@@ -1,93 +1,41 @@
 package org.mmr.core;
 
 import java.io.IOException;
-import static java.nio.file.FileVisitOption.FOLLOW_LINKS;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.EnumSet;
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-/**
- * Used to process a context.
- */
 public final class Engine {
 
-    private Engine() {
-    }
+	private Engine() {
+	}
 
-    /**
-     * Process a given context and create an index.
-     *
-     * @param context - contains information about chosen directory and allowed
-     * content types.
-     */
-    public static final void createIndex() {
+	public static final void createIndex() throws IOException {
+		if (!Context.getIndexDirectory().isPresent()) {
+			throw new RuntimeException("Before index creation: No index directory in context!");
+		}
 
-        final Optional<Path> chosenDirectory = Context.getDataDirectory();
+		if (!Context.getDataDirectory().isPresent()) {
+			throw new RuntimeException("Before index creation: No data directory in context!");
+		}
 
-        if (chosenDirectory.isPresent()) {
-            final Set<EContentType> allowedContentTypes = Context.getAllowedContentTypes();
+		if (Context.getHistogramBinCount() <= 0) {
+			throw new RuntimeException("Before index creation: Histogram bins count is <= 0 in context!");
+		}
 
-            if (!allowedContentTypes.isEmpty()) {
-                try {
-                    final List<DocumentBean> documents = Context.getDocuments();
-                    Files.walkFileTree(
-                            chosenDirectory.get(),
-                            EnumSet.of(FOLLOW_LINKS),
-                            Integer.MAX_VALUE,
-                            new EngineDirectoryVisitor(allowedContentTypes, documents)
-                    );                    
-                } catch (final IOException exception) {
-                    Logger.getGlobal().log(Level.SEVERE, "Unexpected exception occurred while walking through a file tree.", exception);
-                }
-            }
-        } else {
-            throw new RuntimeException("Directory is not available in context!");
-        }
-    }
+		if (Context.getAllowedContentTypes().isEmpty()) {
+			throw new RuntimeException("Before index creation: No allowed content types in context!");
+		}
 
-    /**
-     * Attempts to find all indexed documents containing a specific query. a
-     * specific query.
-     *
-     * @param queryString - the query string
-     * @return - the results from this query search
-     *
-     * @throws java.io.IOException
-     */
-    public static List<DocumentBean> search(final String queryString) throws IOException /*, ParseException*/ {
-        if (queryString == null || queryString.trim().isEmpty()) {
-            throw new RuntimeException("Missing query!");
-        }
-        final List<DocumentBean> documentBeans = new ArrayList<>();
-        /*
-         try (final IndexReader reader = DirectoryReader.open(DIRECTORY)) {
-         final IndexSearcher searcher = new IndexSearcher(reader);
+		Files.walkFileTree(Context.getDataDirectory().get(), new DirectoryVisitor());
+	}
 
-         final QueryParser parser = new QueryParser(DocumentBean.CONTENT_FIELD_NAME, ANALYZER);
-         final Query query = parser.parse(queryString);
+	public static final List<Similarity> search() {
+		if (!Context.getQueryDocument().isPresent()) {
+			throw new RuntimeException("Before search: No query document in context!");
+		}
 
-         final TopDocs topDocs = searcher.search(query, 1000);
-
-			
-
-         for (final ScoreDoc scoreDoc : topDocs.scoreDocs) {
-         final Document document = searcher.doc(scoreDoc.doc);
-
-         documentBeans.add(DocumentBean.of(document));
-         }
-
-			
-         } catch (IndexNotFoundException infE){
-         throw new RuntimeException("No current index exists!");
-         }
-         */
-        return documentBeans;
-    }
+		return new ArrayList<>();
+	}
 
 }

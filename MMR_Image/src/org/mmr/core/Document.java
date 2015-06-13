@@ -1,6 +1,6 @@
 package org.mmr.core;
 
-public final class DocumentBean {
+public final class Document {
 
 	private final String path;
 
@@ -8,15 +8,12 @@ public final class DocumentBean {
 
 	private final int height;
 
-	private final float[][] histrogramRGB;
-
 	private final float[][] histrogramHSB;
 
-	public DocumentBean(final String path, final int width, final int height, final float[][] histrogramRGB, final float[][] histrogramHSB) {
+	public Document(final String path, final int width, final int height, final float[][] histrogramHSB) {
 		this.path = path;
 		this.width = width;
 		this.height = height;
-		this.histrogramRGB = histrogramRGB;
 		this.histrogramHSB = histrogramHSB;
 	}
 
@@ -30,10 +27,6 @@ public final class DocumentBean {
 
 	public int getHeight() {
 		return height;
-	}
-
-	public float[][] getHistrogramRGB() {
-		return histrogramRGB;
 	}
 
 	public float[][] getHistrogramHSB() {

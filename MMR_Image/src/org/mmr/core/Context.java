@@ -21,7 +21,7 @@ public final class Context {
 
 	private static final Set<EContentType> allowedContentTypes = new HashSet<>();
 
-	private static DocumentBean queryDocument;
+	private static Document queryDocument;
 
 	private static float hueImportance;
 
@@ -29,7 +29,7 @@ public final class Context {
 
 	private static float brightnessImportance;
 
-	private static final List<DocumentBean> similarDocuments = new ArrayList<>();
+	private static final List<Document> similarDocuments = new ArrayList<>();
 
 	static {
 		// Default values are initialized.
@@ -44,76 +44,76 @@ public final class Context {
 		brightnessImportance = 0.3f;
 	}
 
-	public static Optional<Path> getIndexDirectory() {
+	public static final Optional<Path> getIndexDirectory() {
 		return Optional.ofNullable(indexDirectory);
 	}
 
-	public static void setIndexDirectory(final Path directory) {
+	public static final void setIndexDirectory(final Path directory) {
 		indexDirectory = directory;
 	}
 
-	public static Optional<Path> getDataDirectory() {
+	public static final Optional<Path> getDataDirectory() {
 		return Optional.ofNullable(dataDirectory);
 	}
 
-	public static void setDataDirectory(final Path directory) {
+	public static final void setDataDirectory(final Path directory) {
 		dataDirectory = directory;
 	}
 
-	public static int getHistogramBinCount() {
+	public static final int getHistogramBinCount() {
 		return histogramBinCount;
 	}
 
-	public static void setHistogramBinCount(final int count) {
+	public static final void setHistogramBinCount(final int count) {
 		histogramBinCount = count;
 	}
 
-	public static Set<EContentType> getAllowedContentTypes() {
+	public static final Set<EContentType> getAllowedContentTypes() {
 		return allowedContentTypes;
 	}
 
-	public static void setAllowedContentTypes(final Collection<EContentType> contentTypes) {
+	public static final void setAllowedContentTypes(final Collection<EContentType> contentTypes) {
 		allowedContentTypes.clear();
 		allowedContentTypes.addAll(contentTypes);
 	}
 
-	public static Optional<DocumentBean> getQueryDocument() {
+	public static final Optional<Document> getQueryDocument() {
 		return Optional.ofNullable(queryDocument);
 	}
 
-	public static void setQueryDocument(final DocumentBean document) {
+	public static final void setQueryDocument(final Document document) {
 		queryDocument = document;
 	}
 
-	public static float getHueImportance() {
+	public static final float getHueImportance() {
 		return hueImportance;
 	}
 
-	public static void setHueImportance(final float importance) {
+	public static final void setHueImportance(final float importance) {
 		hueImportance = importance;
 	}
 
-	public static float getSaturationImportance() {
+	public static final float getSaturationImportance() {
 		return saturationImportance;
 	}
 
-	public static void setSaturationImportance(final float importance) {
+	public static final void setSaturationImportance(final float importance) {
 		saturationImportance = importance;
 	}
 
-	public static float getBrightnessImportance() {
+	public static final float getBrightnessImportance() {
 		return brightnessImportance;
 	}
 
-	public static void setBrightnessImportance(final float importance) {
+	public static final void setBrightnessImportance(final float importance) {
 		brightnessImportance = importance;
 	}
 
-	public static List<DocumentBean> getDocuments() {
+	public static final List<Document> getDocuments() {
 		return similarDocuments;
 	}
 
-	public static void setDocuments(final List<DocumentBean> documents) {
+	public static final void setDocuments(final List<Document> documents) {
 		similarDocuments.clear();
 		similarDocuments.addAll(documents);
 	}
