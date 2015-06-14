@@ -30,8 +30,10 @@ public class Extractor {
     }
 
     private static Document createDocumentBean(final Path file) throws IOException {
+        
         final int bins = Context.getHistogramBinCount();
-
+        Fuzzyfier.refresh(bins);
+        
         final String absolutePath = file.toAbsolutePath().toString();
 
         final BufferedImage bufferedImage = ImageIO.read(file.toFile());
@@ -50,10 +52,12 @@ public class Extractor {
         final float[] brightness = new float[bins];
 
         float[] tmpValues;
+        final int[] rgb = new int[4];
+        final float[] hsb = new float[3];
+        long start = System.currentTimeMillis();
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
 
-                final int[] rgb = new int[4];
                 raster.getPixel(x, y, rgb);
                 tmpValues = Fuzzyfier.extractValuesForIndexRGB(rgb[0], 0, 255, bins);
                 Fuzzyfier.updateHistogram(tmpValues, red);
@@ -62,7 +66,6 @@ public class Extractor {
                 tmpValues = Fuzzyfier.extractValuesForIndexRGB(rgb[2], 0, 255, bins);
                 Fuzzyfier.updateHistogram(tmpValues, blue);
 
-                final float[] hsb = new float[3];
                 Color.RGBtoHSB(rgb[0], rgb[1], rgb[2], hsb);
                 tmpValues = Fuzzyfier.extractValuesForIndexHSB(hsb[0], 0, 1, bins);
                 Fuzzyfier.updateHistogram(tmpValues, hue);

@@ -14,6 +14,7 @@ import java.util.Map;
  */
 public class Fuzzyfier {
 
+    private static int lastBins = 0; //how many bins were used for last caching
     private static final Map<Float, float[]> rgbCache = new HashMap();
     private static final Map<Float, float[]> hsbCache = new HashMap();
         
@@ -110,6 +111,18 @@ public class Fuzzyfier {
         target[lowerIdx] += valuesForIndex[1];
         if (valuesForIndex[2] != 0) {
             target[lowerIdx + 1] += valuesForIndex[2];
+        }
+    }
+    
+    /**
+     *
+     * @param bins - the number of bins to use for the new caching. If it is different from the last used, maps will be erased
+     */
+    public static void refresh(int bins){
+        if (lastBins != bins) {
+            rgbCache.clear();
+            hsbCache.clear();
+            lastBins = bins;
         }
     }
 }
