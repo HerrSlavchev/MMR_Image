@@ -15,24 +15,8 @@ import java.util.Map;
 public class Fuzzyfier {
 
     private static int lastBins = 0; //how many bins were used for last caching
-    private static final Map<Float, float[]> rgbCache = new HashMap();
     private static final Map<Float, float[]> hsbCache = new HashMap();
-        
-    public static float[] extractValuesForIndexRGB(float value, float normalizationMinimum, float normalizationMaximum, int bins) {
-        
-        float[] res;
-        //use caching in order to lookup known results instead of repeating all computations
-        float[] cached = rgbCache.get(value);
-        if(cached != null) {
-            res = cached;
-        } else {
-            res = extractValuesForIndex(value, normalizationMinimum, normalizationMaximum, bins);
-            rgbCache.put(value, res);
-        }
-        
-        return res;
-    }
-    
+           
     public static float[] extractValuesForIndexHSB(float value, float normalizationMinimum, float normalizationMaximum, int bins) {
         
         float[] res;
@@ -67,10 +51,10 @@ public class Fuzzyfier {
         };
 
         /*e.g: we expect values from 0 to 255 and want to separate them into 32 bins -> check how large each bin is
-         1) from 0 to 255 -> (255 - 0 + 1) = 256 possible discrete values
+         1) from 0 to 255 -> (255 - 0) = 255 possible discrete values
          2) 32 bins, each will cover 256 / 32 = 8 discrete values
          */
-        float binLength = (normalizationMaximum - normalizationMinimum + 1) / bins;
+        float binLength = (normalizationMaximum - normalizationMinimum) / bins;
         /*e.g: we want to determine between which bins is the given value, e.g 57
         relativeIdx = 57 / 8 = 7.125
         resIdx = 7 -> the given value is between bins with index 7 and 8
@@ -120,7 +104,6 @@ public class Fuzzyfier {
      */
     public static void refresh(int bins){
         if (lastBins != bins) {
-            rgbCache.clear();
             hsbCache.clear();
             lastBins = bins;
         }

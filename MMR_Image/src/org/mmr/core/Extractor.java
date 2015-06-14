@@ -41,11 +41,6 @@ public class Extractor {
         final int width = raster.getWidth();
         final int height = raster.getHeight();
 
-        //RGB histogram components
-        final float[] red = new float[bins];
-        final float[] green = new float[bins];
-        final float[] blue = new float[bins];
-
         //HSB histogram components
         final float[] hue = new float[bins];
         final float[] saturation = new float[bins];
@@ -54,19 +49,13 @@ public class Extractor {
         float[] tmpValues;
         final int[] rgb = new int[4];
         final float[] hsb = new float[3];
-        long start = System.currentTimeMillis();
+        
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
 
                 raster.getPixel(x, y, rgb);
-                tmpValues = Fuzzyfier.extractValuesForIndexRGB(rgb[0], 0, 255, bins);
-                Fuzzyfier.updateHistogram(tmpValues, red);
-                tmpValues = Fuzzyfier.extractValuesForIndexRGB(rgb[1], 0, 255, bins);
-                Fuzzyfier.updateHistogram(tmpValues, green);
-                tmpValues = Fuzzyfier.extractValuesForIndexRGB(rgb[2], 0, 255, bins);
-                Fuzzyfier.updateHistogram(tmpValues, blue);
-
                 Color.RGBtoHSB(rgb[0], rgb[1], rgb[2], hsb);
+                
                 tmpValues = Fuzzyfier.extractValuesForIndexHSB(hsb[0], 0, 1, bins);
                 Fuzzyfier.updateHistogram(tmpValues, hue);
                 tmpValues = Fuzzyfier.extractValuesForIndexHSB(hsb[1], 0, 1, bins);
@@ -75,11 +64,18 @@ public class Extractor {
                 Fuzzyfier.updateHistogram(tmpValues, brightness);
             }
         }
+        
 
         final float[][] histogramHSB = new float[][]{
             hue,
             saturation,
             brightness,};
+        for(float[] f : histogramHSB){
+            System.out.println("-----");
+            for(float ff : f){
+                System.out.print(ff + " ");
+            }
+        }
 
         return new Document(absolutePath, width, height, histogramHSB);
     }
