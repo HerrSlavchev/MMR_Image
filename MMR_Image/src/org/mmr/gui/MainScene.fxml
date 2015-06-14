@@ -62,7 +62,7 @@
                            </columnConstraints>
                            <rowConstraints>
                               <RowConstraints maxHeight="80.0" minHeight="80.0" prefHeight="80.0" valignment="TOP" vgrow="NEVER" />
-                              <RowConstraints minHeight="575.0" prefHeight="575.0" valignment="TOP" vgrow="ALWAYS" />
+                              <RowConstraints maxHeight="1.7976931348623157E308" minHeight="575.0" prefHeight="575.0" valignment="TOP" vgrow="ALWAYS" />
                            </rowConstraints>
                            <children>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="156.0" prefWidth="978.0">
@@ -99,9 +99,9 @@
                                                 </GridPane>
                                              </children>
                                           </AnchorPane>
-                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                                        <AnchorPane maxHeight="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                                              <children>
-                                                <ListView fx:id="similarityListView" layoutX="121.0" layoutY="58.0" prefHeight="436.0" prefWidth="976.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                <ListView fx:id="similarityListView" layoutX="121.0" layoutY="58.0" maxHeight="1.7976931348623157E308" prefHeight="436.0" prefWidth="976.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                              </children>
                                           </AnchorPane>
                                       </items>

@@ -2,6 +2,9 @@ package org.mmr.core;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,11 +35,24 @@ public final class Engine {
     }
 
     public static final List<Similarity> search() {
+        
+        List<Similarity> res = new ArrayList<>();
+        
         if (!Context.getQueryDocument().isPresent()) {
             throw new RuntimeException("Before search: No query document in context!");
         }
 
-        return Context.getAllDocuments().stream().map((document) -> new Similarity(document, evalSimilarity(document))).collect(Collectors.toList());
+        
+        res = Context.getAllDocuments().stream().map((document) -> new Similarity(document, evalSimilarity(document))).collect(Collectors.toList());
+        Collections.sort(res, (Similarity s1, Similarity s2) -> {
+            float diff = s1.getValue() - s2.getValue();
+            if(diff > 0) {
+                return -1;
+            } else {
+                return 1;
+            }
+        });
+        return res;
     }
 
     //chi-square measure
@@ -45,7 +61,7 @@ public final class Engine {
         Document query = Context.getQueryDocument().get();
         float currDist = 0;
         
-        float[] dist = new float[]{0,0,0}; //
+        float[] dist = new float[]{0,0,0}; //keep distances in H, S and B
         float[] histQ; //pointer to H, S, or B histogram of query document
         float[] histD; //same for doc
         
