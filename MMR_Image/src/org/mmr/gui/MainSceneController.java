@@ -166,6 +166,7 @@ public class MainSceneController implements Initializable {
 						final GridPane imageGridPane = new GridPane();
 
 						final StackPane imagePane = new StackPane();
+						imagePane.setMaxSize(150, 150);
 						imagePane.setPrefSize(150, 150);
 						imagePane.setAlignment(Pos.TOP_LEFT);
 
@@ -177,7 +178,7 @@ public class MainSceneController implements Initializable {
 						imagePane.getChildren().add(imageView);
 
 						final Label label = new Label("" + similarity.getValue());
-						label.setStyle("-fx-background-color: white;");
+						label.setStyle("-fx-background-color: skyblue;");
 						imagePane.getChildren().add(label);
 
 						imageGridPane.add(imagePane, 0, 0);
