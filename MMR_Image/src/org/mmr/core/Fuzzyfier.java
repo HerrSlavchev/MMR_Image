@@ -17,6 +17,17 @@ public class Fuzzyfier {
     private static int lastBins = 0; //how many bins were used for last caching
     private static final Map<Float, float[]> hsbCache = new HashMap();
            
+    /**
+     * Provide a wrapper around extractValuesForIndex() and add caching in order to reduce calculations
+     * @param value - a simple scalar value that will be separated between the two closest bins
+     * @param normalizationMinimum - the minimal value of the expected data region
+     * @param normalizationMaximum - the maximal value of the expected data region
+     * @param bins - the number of bins in which the region must be separated
+     * @return - array with three values: 
+     *      v[0] = index position of the first bin, 
+     *      v[1] = how much should be added to the first bin, 
+     *      v[2] = how much should be added to the next bin (set to 0 if v[0] is index of the last possible bin)
+     */
     public static float[] extractValuesForIndexHSB(float value, float normalizationMinimum, float normalizationMaximum, int bins) {
         
         float[] res;
@@ -90,6 +101,11 @@ public class Fuzzyfier {
         return res;
     }
 
+    /**
+     * Interpret results from value extractors
+     * @param valuesForIndex result from a value extractor
+     * @param target  array representing a histogram
+     */
     public static void updateHistogram(float[] valuesForIndex, float[] target) {
         int lowerIdx = (int) valuesForIndex[0];
         target[lowerIdx] += valuesForIndex[1];
@@ -99,8 +115,8 @@ public class Fuzzyfier {
     }
     
     /**
-     *
-     * @param bins - the number of bins to use for the new caching. If it is different from the last used, maps will be erased
+     * Erases cached values if they were generated for a different number of bins
+     * @param bins - the number of bins to use for the new caching. 
      */
     public static void refresh(int bins){
         if (lastBins != bins) {

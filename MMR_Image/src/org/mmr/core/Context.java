@@ -15,24 +15,30 @@ import java.util.Set;
  */
 public final class Context {
 
+        /* path to directory where index is stored */
 	private String indexDirectory;
 
+        /* path to directory where the image collection is stored */
 	private String dataDirectory;
-
+        
+        /* number of bins in which the histograms will be aggregated */
 	private int histogramBinCount;
 
 	private final Set<EContentType> allowedContentTypes = new HashSet<>();
 
 	private Document queryDocument;
 
+        /* use to adjust importance of different components */
 	private float hueWeight;
 
 	private float saturationWeight;
 
 	private float brightnessWeight;
 
+        /*all currently indexed documents*/
 	private final List<Document> allDocuments = new ArrayList<>();
 
+        /*ranked result after query evaluation*/
 	private final List<Document> similarDocuments = new ArrayList<>();
 
 	private Context() {
@@ -49,10 +55,18 @@ public final class Context {
 
 	private static Context INSTANCE = new Context();
 
+        /**
+         * 
+         * @return JSON representation of context current state
+         */
 	public static final String toJson() {
 		return new Gson().toJson(INSTANCE);
 	}
-
+        
+        /**
+         * Parse from json format in order to configure the context
+         * @param json - the json to be parsed
+         */
 	public static final void fromJson(final String json) {
 		final Context context = new Gson().fromJson(json, Context.class);
 		INSTANCE = context;
@@ -65,7 +79,7 @@ public final class Context {
 			return Optional.empty();
 		}
 	}
-
+        
 	public static final void setIndexDirectory(final Path directory) {
 		INSTANCE.indexDirectory = directory.toString();
 	}
@@ -149,6 +163,9 @@ public final class Context {
 		INSTANCE.allDocuments.addAll(documents);
 	}
 
+        /**
+         * reset context to initial state
+         */
 	public static void reset() {
 		INSTANCE.similarDocuments.clear();
 		INSTANCE.allDocuments.clear();

@@ -14,6 +14,13 @@ import org.apache.tika.Tika;
  */
 public class Extractor {
 
+    /**
+     * Use to create a document representation in the application domain
+     * @param file  path to the file
+     * @param fromAllowedContentType set to false if you want to override user type customizations
+     * @return A document if the provided file has a correct type
+     * @throws IOException 
+     */
     public static Optional<Document> extract(final Path file, final boolean fromAllowedContentType) throws IOException {
         final String detectedValue = new Tika().detect(file.toFile());
         final Optional<EContentType> contentType = EContentType.of(detectedValue);
@@ -70,7 +77,6 @@ public class Extractor {
             hue,
             saturation,
             brightness,};
-
         return new Document(absolutePath, width, height, histogramHSB);
     }
 }
