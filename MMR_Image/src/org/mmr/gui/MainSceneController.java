@@ -53,6 +53,7 @@ import org.mmr.core.Document;
 import org.mmr.core.EContentType;
 import org.mmr.core.Engine;
 import org.mmr.core.Extractor;
+import org.mmr.core.PersistentIndex;
 import org.mmr.core.Similarity;
 
 public class MainSceneController implements Initializable {
@@ -198,6 +199,42 @@ public class MainSceneController implements Initializable {
 		final Optional<File> indexDirecotry = chooseDirectory(indexDirectoryChooser);
 		if (indexDirecotry.isPresent()) {
 			indexDirectoryTextField.setText(indexDirecotry.get().getAbsolutePath());
+			changeIndexDirectoryTextField(null);
+		}
+	}
+
+	@FXML
+	private void changeIndexDirectoryTextField(final ActionEvent actionEvent) {
+		final String indexDirectoryPath = indexDirectoryTextField.getText();
+
+		if (!indexDirectoryPath.isEmpty()) {
+			try {
+				final boolean loaded = PersistentIndex.load(Paths.get(indexDirectoryPath));
+				if (loaded) {
+					indexDirectoryTextField.setText(Context.getIndexDirectory().get().toString());
+					dataDirectoryTextField.setText(Context.getDataDirectory().get().toString());
+					histogramBinsChoiceBox.setValue(Context.getHistogramBinCount());
+
+					final Set<EContentType> allowedContentTypes = Context.getAllowedContentTypes();
+					bmpCheckBox.setSelected(allowedContentTypes.contains(EContentType.BMP));
+					jpegCheckBox.setSelected(allowedContentTypes.contains(EContentType.JPEG));
+					pngCheckBox.setSelected(allowedContentTypes.contains(EContentType.PNG));
+
+					final Optional<Document> queryDocument = Context.getQueryDocument();
+					if (queryDocument.isPresent()) {
+						queryDocumentTextField.setText(queryDocument.get().getPath());
+					}
+
+					hueImportanceTextField.setText(Context.getHueWeight() + "");
+					saturationImportanceTextField.setText(Context.getSaturationWeight() + "");
+					brightnessImportanceTextField.setText(Context.getBrightnessWeight() + "");
+
+					dataExplorationTitledPane.setDisable(false);
+				}
+			} catch (final IOException exception) {
+				Logger.getGlobal().log(Level.SEVERE, null, exception);
+				indexDirectoryTextField.requestFocus();
+			}
 		}
 	}
 
@@ -256,6 +293,8 @@ public class MainSceneController implements Initializable {
 			} catch (IOException eIO) {
 				throw new RuntimeException("Could not open file!");
 			}
+			
+			similarityListView.getItems().clear();
 			dataExplorationTitledPane.setDisable(false);
 			queryDocumentTextField.requestFocus();
 		}

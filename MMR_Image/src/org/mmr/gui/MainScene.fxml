@@ -29,7 +29,7 @@
                            <children>
                               <Label layoutX="15.0" layoutY="15.0" text="Index folder:" />
                               <Label layoutX="15.0" layoutY="45.0" text="Data folder:" />
-                              <TextField fx:id="indexDirectoryTextField" layoutX="105.0" layoutY="10.0" prefHeight="25.0" prefWidth="230.0" />
+                              <TextField fx:id="indexDirectoryTextField" layoutX="105.0" layoutY="10.0" onAction="#changeIndexDirectoryTextField" prefHeight="25.0" prefWidth="230.0" />
                               <TextField fx:id="dataDirectoryTextField" layoutX="105.0" layoutY="40.0" prefHeight="25.0" prefWidth="230.0" />
                               <Button layoutX="335.0" layoutY="10.0" mnemonicParsing="false" onAction="#clickChooseIndexFolderButton" text="Choose" />
                               <Button layoutX="335.0" layoutY="40.0" mnemonicParsing="false" onAction="#clickChooseDataFolderButton" text="Choose" />
