@@ -64,15 +64,26 @@ public final class Engine {
 		float[] dist = new float[]{0, 0, 0}; //keep distances in H, S and B
 		float[] histQ; //pointer to H, S, or B histogram of query document
 		float[] histD; //same for doc
-
+                /*use to scale hist values according to image dimensions - e.g:
+                1) Image A has value histA[2] = 15 and dimensions [10x10]
+                2) Image B is exactly the same as image A and dimensions [20x20] -> thus histB[2] = 60
+                3) We scale the hues: histA'[2] = 15 / (10*10) = 0.15, histB'[2] = 60 / (20 * 20) = 0.15
+                4) We compare histA' and histB'
+                */
+                float scaleFactorQ = query.getHeight() * query.getWidth();
+                float scaleFactorD = doc.getHeight() * doc.getWidth();
+                float scaledQ, scaledD;
 		for (int i = 0; i < dist.length; i++) {
-			histQ = query.getHistrogramHSB()[i];
-			histD = doc.getHistrogramHSB()[i];
-			for (int j = 0; j < histQ.length; j++) {
-				if (histQ[j] + histD[j] != 0) {
-					dist[i] += (2 * (histQ[j] - histD[j]) * (histQ[j] - histD[j])) / (histQ[j] + histD[j]);
-				}
-			}
+                    histQ = query.getHistrogramHSB()[i];
+                    histD = doc.getHistrogramHSB()[i];
+                        
+                    for (int j = 0; j < histQ.length; j++) {
+                        scaledQ = histQ[j] * scaleFactorQ;
+                        scaledD = histD[j] * scaleFactorD;
+                        if (scaledQ + scaledD != 0) {
+                            dist[i] += (2 * (scaledQ - scaledD) * (scaledQ - scaledD)) / (scaledQ + scaledD);
+                        }
+                    }
 		}
 
 		//apply weighing factors

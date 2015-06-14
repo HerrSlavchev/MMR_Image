@@ -70,12 +70,6 @@ public class Extractor {
             hue,
             saturation,
             brightness,};
-        for(float[] f : histogramHSB){
-            System.out.println("-----");
-            for(float ff : f){
-                System.out.print(ff + " ");
-            }
-        }
 
         return new Document(absolutePath, width, height, histogramHSB);
     }
