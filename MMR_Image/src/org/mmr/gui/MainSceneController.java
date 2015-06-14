@@ -41,7 +41,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
@@ -107,7 +109,7 @@ public class MainSceneController implements Initializable {
 	private ProgressIndicator searchProgressIndicator;
 
 	@FXML
-	private GridPane queryDocumentGridPane;
+	private HBox queryDocumentHBox;
 
 	@FXML
 	private ListView<Similarity> similarityListView;
@@ -163,19 +165,27 @@ public class MainSceneController implements Initializable {
 					if (similarity != null) {
 						final GridPane imageGridPane = new GridPane();
 
+						final StackPane imagePane = new StackPane();
+						imagePane.setPrefSize(150, 150);
+						imagePane.setAlignment(Pos.TOP_LEFT);
+
 						final ImageView imageView = new ImageView();
 						imageView.setImage(new Image("file:" + similarity.getDocument().getPath(), true));
 						imageView.setPreserveRatio(true);
-						imageView.setFitHeight(150);
-						imageView.setFitWidth(150);
+						imageView.fitWidthProperty().bind(imagePane.widthProperty());
+						imageView.fitHeightProperty().bind(imagePane.heightProperty());
+						imagePane.getChildren().add(imageView);
 
-						imageGridPane.add(imageView, 0, 0);
-						imageGridPane.add(new Label(" Similarity: " + similarity.getValue()), 1, 0);
+						final Label label = new Label("" + similarity.getValue());
+						label.setStyle("-fx-background-color: white;");
+						imagePane.getChildren().add(label);
+
+						imageGridPane.add(imagePane, 0, 0);
 
 						final float[][] histogramHSB = similarity.getDocument().getHistrogramHSB();
-						imageGridPane.add(createHistogram("", histogramHSB[0], 150, 150), 2, 0);
-						imageGridPane.add(createHistogram("", histogramHSB[1], 150, 150), 3, 0);
-						imageGridPane.add(createHistogram("", histogramHSB[2], 150, 150), 4, 0);
+						imageGridPane.add(createHistogram("", histogramHSB[0], 150, 150), 1, 0);
+						imageGridPane.add(createHistogram("", histogramHSB[1], 150, 150), 2, 0);
+						imageGridPane.add(createHistogram("", histogramHSB[2], 150, 150), 3, 0);
 
 						setGraphic(imageGridPane);
 					}
@@ -293,7 +303,7 @@ public class MainSceneController implements Initializable {
 			} catch (IOException eIO) {
 				throw new RuntimeException("Could not open file!");
 			}
-			
+
 			similarityListView.getItems().clear();
 			dataExplorationTitledPane.setDisable(false);
 			queryDocumentTextField.requestFocus();
@@ -419,24 +429,24 @@ public class MainSceneController implements Initializable {
 	}
 
 	private void updateQueryDocumentPresentation(final Document documentBean) {
-		queryDocumentGridPane.getChildren().clear();
+		queryDocumentHBox.getChildren().clear();
 
 		final Pane queryDocumentImageViewPane = new Pane();
+		queryDocumentImageViewPane.setPrefSize(150, 150);
 
 		final ImageView queryDocumentImageView = new ImageView();
 		queryDocumentImageView.setImage(new Image("file:" + documentBean.getPath(), true));
 		queryDocumentImageView.setPreserveRatio(true);
-		queryDocumentImageView.setSmooth(true);
 		queryDocumentImageView.fitWidthProperty().bind(queryDocumentImageViewPane.widthProperty());
 		queryDocumentImageView.fitHeightProperty().bind(queryDocumentImageViewPane.heightProperty());
 
 		queryDocumentImageViewPane.getChildren().add(queryDocumentImageView);
-		queryDocumentGridPane.add(queryDocumentImageViewPane, 0, 0);
+		queryDocumentHBox.getChildren().add(queryDocumentImageViewPane);
 
 		final float[][] histogramHSB = documentBean.getHistrogramHSB();
-		queryDocumentGridPane.add(createHistogram("Hue", histogramHSB[0], -1, -1), 1, 0);
-		queryDocumentGridPane.add(createHistogram("Saturation", histogramHSB[1], -1, -1), 2, 0);
-		queryDocumentGridPane.add(createHistogram("Brightness", histogramHSB[2], -1, -1), 3, 0);
+		queryDocumentHBox.getChildren().add(createHistogram("Hue", histogramHSB[0], 150, 150));
+		queryDocumentHBox.getChildren().add(createHistogram("Saturation", histogramHSB[1], 150, 150));
+		queryDocumentHBox.getChildren().add(createHistogram("Brightness", histogramHSB[2], 150, 150));
 	}
 
 	private BarChart<String, Number> createHistogram(final String name, final float[] values, final int width, final int height) {
