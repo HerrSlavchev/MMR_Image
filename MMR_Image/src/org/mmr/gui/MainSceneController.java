@@ -187,6 +187,8 @@ public class MainSceneController implements Initializable {
 						imageGridPane.add(createHistogram("", histogramHSB[1], 150, 150), 2, 0);
 						imageGridPane.add(createHistogram("", histogramHSB[2], 150, 150), 3, 0);
 
+						imageGridPane.add(new Label(similarity.getDocument().getPath()), 4, 0);
+
 						setGraphic(imageGridPane);
 					}
 				}
